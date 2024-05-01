@@ -9,6 +9,7 @@ module com.example.inglizgo_v3 {
     requires mysql.connector.j;
     requires java.desktop;
     requires javafx.swing;
+    requires fontawesomefx;
 
     opens com.example.inglizgo_v3 to javafx.fxml;
     exports com.example.inglizgo_v3;
