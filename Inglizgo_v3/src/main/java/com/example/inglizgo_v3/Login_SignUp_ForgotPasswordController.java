@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -170,6 +171,12 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
 
                     // Set the logged-in username in MainFormController
                     mainFormController.setLoggedInUsername(username);
+                    // Load user image from the database
+                    // Call loadUserImageFromDatabase method using the instance
+                    Image userImage = mainFormController.loadUserImageFromDatabase(Login_username.getText());
+
+                    mainFormController.setUserImage(userImage);
+
 
                     Stage stage = new Stage();
                     Scene scene = new Scene(root);
