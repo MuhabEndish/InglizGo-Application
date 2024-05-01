@@ -1,6 +1,9 @@
 package com.example.inglizgo_v3;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+
+import java.util.Optional;
 
 public class AlertMessage {
 
@@ -24,6 +27,14 @@ public class AlertMessage {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public Optional<ButtonType> confirmationMessage(String message) {
+        alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation message");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        return alert.showAndWait();
     }
 
 }
