@@ -6,15 +6,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -23,8 +24,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.sql.*;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class MainFormController implements Initializable {
 
@@ -68,7 +68,7 @@ public class MainFormController implements Initializable {
     private Button HomePage_AddCardBtn;
 
     @FXML
-    private AnchorPane HomePage_WordsScreen;
+    private ScrollPane HomePage_WordsScreenScrollPane;
 
     @FXML
     private AnchorPane Home_Page;
@@ -186,6 +186,8 @@ public class MainFormController implements Initializable {
 
     @FXML
     private AnchorPane userInfo_userImageContainer1;
+
+
 
 
     private Connection connect;
@@ -663,6 +665,78 @@ public class MainFormController implements Initializable {
         userInfo_UserName.setVisible(true); // Show the username label
     }
 
+    // Method to fetch Word Card data from the database
+    private List<WordCard> fetchWordCards() {
+        List<WordCard> wordCards = new ArrayList<>();
+
+        try (Connection connection = connectDB();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM wordcard WHERE UserName = ?")) {
+            statement.setString(1, loggedInUsername);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("EN_word", resultSet.getString("EN_word"));
+                    data.put("TR_translate", resultSet.getString("TR_translate"));
+                    data.put("FirstEx", resultSet.getString("FirstEx"));
+                    data.put("SecondEX", resultSet.getString("SecondEX"));
+                    data.put("Word_Image", resultSet.getBytes("Word_Image"));
+
+                    // Create a WordCard object and add it to the list
+                    WordCard wordCard = new WordCard(data);
+                    wordCards.add(wordCard);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Consider handling the exception appropriately
+        }
+
+        return wordCards;
+    }
+
+
+
+    // Method to dynamically create card components and add them to the home page
+    private void createWordCardComponents(List<WordCard> wordCards) {
+
+        // Create a VBox to hold the card components
+        VBox cardContainer = new VBox(10); // Set spacing between cards
+        cardContainer.setPadding(new Insets(40)); // Set padding around the VBox
+        cardContainer.setAlignment(Pos.TOP_CENTER);
+        // cardContainer.setPadding(new Insets(10)); // Set padding around the VBox
+        AnchorPane scrollPanneMainAnchor = new AnchorPane();
+        // Add card components to the VBox
+        for (WordCard wordCard : wordCards) {
+            CardComponent cardComponent = new CardComponent(wordCard);
+            cardContainer.getChildren().add(cardComponent);
+        }
+
+        // Add the VBox as a child of the AnchorPane
+        scrollPanneMainAnchor.getChildren().add(cardContainer);
+
+        // Set the constraints for the VBox within the AnchorPane to make it top-centered
+        AnchorPane.setTopAnchor(cardContainer, 0.0);
+        AnchorPane.setLeftAnchor(cardContainer, 0.0);
+        AnchorPane.setRightAnchor(cardContainer, 0.0);
+
+        // Calculate the vertical center position for the VBox
+        double topMargin = (scrollPanneMainAnchor.getHeight() - cardContainer.getHeight()) / 2.0;
+        AnchorPane.setTopAnchor(cardContainer, topMargin);
+
+        // Set the AnchorPane as the content of the ScrollPane
+        HomePage_WordsScreenScrollPane.setContent(scrollPanneMainAnchor);
+
+        scrollPanneMainAnchor.setBackground(new Background(new BackgroundFill(Color.web("#1e242b"), null, null)));
+
+        // Set the preferred width and height of the AnchorPane
+        scrollPanneMainAnchor.setPrefSize(1120, 560);
+
+
+        cardContainer.setBackground(new Background(new BackgroundFill(Color.web("#F3CA52"), null, null)));
+        // Set the preferred width and height of the VBox
+
+
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Program_StackPane.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
@@ -680,6 +754,11 @@ public class MainFormController implements Initializable {
                 closeUsernameTextField();
             }
         });
+
+        // Fetch Word Card data from the database
+        List<WordCard> wordCards = fetchWordCards();
+        // Dynamically create card components and add them to the home page
+        createWordCardComponents(wordCards);
 
     }
 }
