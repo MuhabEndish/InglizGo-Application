@@ -24,7 +24,7 @@
          <children>
             <AnchorPane fx:id="UserInfo_pane" layoutY="51.0" prefHeight="590.0" prefWidth="1120.0" style="-fx-background-color: #1e242b;">
                <children>
-                  <AnchorPane fx:id="UserInfo_mainPane" prefHeight="600.0" prefWidth="1120.0" style="-fx-background-color: #1e242b;" visible="false">
+                  <AnchorPane fx:id="UserInfo_mainPane" prefHeight="600.0" prefWidth="1120.0" style="-fx-background-color: #1e242b;">
                      <children>
                         <AnchorPane fx:id="userInfo_userImageContainer" layoutX="473.0" layoutY="74.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #40a2e3; -fx-border-radius: 4;">
                            <children>
