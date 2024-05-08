@@ -68,9 +68,6 @@ public class MainFormController implements Initializable {
     private Button HomePage_AddCardBtn;
 
     @FXML
-    private ScrollPane HomePage_WordsScreenScrollPane;
-
-    @FXML
     private AnchorPane Home_Page;
 
     @FXML
@@ -93,6 +90,9 @@ public class MainFormController implements Initializable {
 
     @FXML
     private TextField WordCard_FirstEx;
+
+    @FXML
+    private AnchorPane WordCard_Screen;
 
     @FXML
     private TextField WordCard_SecondEx;
@@ -194,7 +194,7 @@ public class MainFormController implements Initializable {
     private PreparedStatement prepare;
     private ResultSet result;
     private Statement statement;
-    private String loggedInUsername; // Assuming username is used as the identifier
+    public String loggedInUsername; // Assuming username is used as the identifier
 
     //METHOD ESTABLISHES A CONNECTION TO A MySQL DATABASE NAMED "inglizgo" HOSTED ON THE LOCALHOST SERVER
     public static Connection connectDB() {
@@ -210,7 +210,14 @@ public class MainFormController implements Initializable {
 
     public void setLoggedInUsername(String username) {
         this.loggedInUsername = username;
+        System.out.println("Username set to: " + username); // Debug print
+
+        // Fetch and display word cards for the logged-in user
+        fetchAndDisplayWordCards();
+
         updateUsernameLabel();
+
+
     }
 
     // Method to update the label text with the loggedInUsername
@@ -623,6 +630,9 @@ public class MainFormController implements Initializable {
 
                 alert.successMessage("Card successfully added.");
 
+                // After saving the word card, reload the displayed cards
+                reloadDisplayedWordCards();
+
                 WordCard_addWord.setText("");
                 WordCard_Translate.setText("");
                 WordCard_FirstEx.setText("");
@@ -665,81 +675,90 @@ public class MainFormController implements Initializable {
         userInfo_UserName.setVisible(true); // Show the username label
     }
 
-    // Method to fetch Word Card data from the database
-    private List<WordCard> fetchWordCards() {
-        List<WordCard> wordCards = new ArrayList<>();
+    private void fetchAndDisplayWordCards() {
+        try {
+            connect = connectDB();
+            PreparedStatement selectStatement = connect.prepareStatement("SELECT EN_word, TR_translate, FirstEx, SecondEx, Word_Image FROM wordcard WHERE UserName = ?");
+            selectStatement.setString(1, loggedInUsername);
+            ResultSet resultSet = selectStatement.executeQuery();
 
-        try (Connection connection = connectDB();
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM wordcard WHERE UserName = ?")) {
-            statement.setString(1, loggedInUsername);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("EN_word", resultSet.getString("EN_word"));
-                    data.put("TR_translate", resultSet.getString("TR_translate"));
-                    data.put("FirstEx", resultSet.getString("FirstEx"));
-                    data.put("SecondEX", resultSet.getString("SecondEX"));
-                    data.put("Word_Image", resultSet.getBytes("Word_Image"));
+            // Create a VBox to hold the card containers with spacing
+            VBox cardContainerBox = new VBox();
+             cardContainerBox.setSpacing(20); // Adjust spacing as needed
+             cardContainerBox.setAlignment(Pos.CENTER);// Align the card container box to the center
+            //cardContainerBox.setPrefWidth(1102);
 
-                    // Create a WordCard object and add it to the list
-                    WordCard wordCard = new WordCard(data);
-                    wordCards.add(wordCard);
+            cardContainerBox.setStyle("-fx-background-color: #00000000 ; -fx-pref-width: 1102; -fx-padding: 20px 10px;");
+
+            while (resultSet.next()) {
+                // Create a container for the card
+                HBox cardContainer = new HBox();
+
+                cardContainer.setSpacing(30); // Adjust spacing as needed
+                cardContainer.setAlignment(Pos.CENTER);
+
+                cardContainer.getStyleClass().add("word-card"); // You can add a CSS class for styling
+                // Set inline styles for the cardContainer
+                cardContainer.setStyle("-fx-background-color: #3d4654; -fx-padding: 50px ; -fx-pref-width:1000px; -fx-background-radius: 6px; -fx-border-color: #585a5e ; -fx-border-radius:6px");
+
+                // Create labels for each piece of information
+                Label wordLabel = new Label("Word: " + resultSet.getString("EN_word"));
+                Label translateLabel = new Label("Translation: " + resultSet.getString("TR_translate"));
+                Label firstExLabel = new Label("First Example: " + resultSet.getString("FirstEx"));
+                Label secondExLabel = new Label("Second Example: " + resultSet.getString("SecondEx"));
+
+                // Set styles for the labels
+                wordLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 17px; -fx-pref-width: 100px ; -fx-wrap-text: true;");
+                translateLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white ; -fx-font-size: 17px;-fx-pref-width: 180px ; -fx-wrap-text: true;");
+                firstExLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 17px; -fx-pref-width: 220px ; -fx-wrap-text: true; ");
+                secondExLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 17px; -fx-pref-width: 220px; -fx-wrap-text: true; ");
+
+                // Create an ImageView for the word image
+                byte[] imageData = resultSet.getBytes("Word_Image");
+                if (imageData != null) {
+                    Image image = new Image(new ByteArrayInputStream(imageData));
+                    ImageView imageView = new ImageView(image);
+                    imageView.setFitWidth(150); // Set your preferred width
+                    imageView.setFitHeight(120); // Set your preferred height
+                    cardContainer.getChildren().add(imageView);
                 }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace(); // Consider handling the exception appropriately
-        }
 
-        return wordCards;
+                // Add labels to the card container
+                cardContainer.getChildren().addAll(wordLabel, translateLabel, firstExLabel, secondExLabel);
+
+                // Add the card container to the VBox with spacing
+                cardContainerBox.getChildren().add(cardContainer);
+
+            }
+
+            // Add the VBox with card containers to the AnchorPane and center it
+            WordCard_Screen.getChildren().add(cardContainerBox);
+            AnchorPane.setTopAnchor(cardContainerBox, 0.0);
+            AnchorPane.setLeftAnchor(cardContainerBox, 0.0);
+
+            connect.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    private void clearDisplayedWordCards() {
+        // Remove all existing card containers from the main form pane
+        WordCard_Screen.getChildren().removeIf(node -> node.getStyleClass().contains("word-card"));
     }
 
+    private void reloadDisplayedWordCards() {
+        // Clear existing displayed cards
+        clearDisplayedWordCards();
 
-
-    // Method to dynamically create card components and add them to the home page
-    private void createWordCardComponents(List<WordCard> wordCards) {
-
-        // Create a VBox to hold the card components
-        VBox cardContainer = new VBox(10); // Set spacing between cards
-        cardContainer.setPadding(new Insets(40)); // Set padding around the VBox
-        cardContainer.setAlignment(Pos.TOP_CENTER);
-        // cardContainer.setPadding(new Insets(10)); // Set padding around the VBox
-        AnchorPane scrollPanneMainAnchor = new AnchorPane();
-        // Add card components to the VBox
-        for (WordCard wordCard : wordCards) {
-            CardComponent cardComponent = new CardComponent(wordCard);
-            cardContainer.getChildren().add(cardComponent);
-        }
-
-        // Add the VBox as a child of the AnchorPane
-        scrollPanneMainAnchor.getChildren().add(cardContainer);
-
-        // Set the constraints for the VBox within the AnchorPane to make it top-centered
-        AnchorPane.setTopAnchor(cardContainer, 0.0);
-        AnchorPane.setLeftAnchor(cardContainer, 0.0);
-        AnchorPane.setRightAnchor(cardContainer, 0.0);
-
-        // Calculate the vertical center position for the VBox
-        double topMargin = (scrollPanneMainAnchor.getHeight() - cardContainer.getHeight()) / 2.0;
-        AnchorPane.setTopAnchor(cardContainer, topMargin);
-
-        // Set the AnchorPane as the content of the ScrollPane
-        HomePage_WordsScreenScrollPane.setContent(scrollPanneMainAnchor);
-
-        scrollPanneMainAnchor.setBackground(new Background(new BackgroundFill(Color.web("#1e242b"), null, null)));
-
-        // Set the preferred width and height of the AnchorPane
-        scrollPanneMainAnchor.setPrefSize(1120, 560);
-
-
-        cardContainer.setBackground(new Background(new BackgroundFill(Color.web("#F3CA52"), null, null)));
-        // Set the preferred width and height of the VBox
-
-
+        // Fetch and display new cards
+        fetchAndDisplayWordCards();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //Program_StackPane.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+
+        System.out.println("Initializing with username: " + loggedInUsername); // Debug print
+
 
         // Set Home_Page visible initially
         Home_Page.setVisible(true);
@@ -755,10 +774,8 @@ public class MainFormController implements Initializable {
             }
         });
 
-        // Fetch Word Card data from the database
-        List<WordCard> wordCards = fetchWordCards();
-        // Dynamically create card components and add them to the home page
-        createWordCardComponents(wordCards);
+
+
 
     }
 }

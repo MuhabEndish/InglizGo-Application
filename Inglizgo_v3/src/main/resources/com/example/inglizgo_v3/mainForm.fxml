@@ -264,7 +264,7 @@
                   </AnchorPane>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="Home_Page" layoutY="51.0" prefHeight="555.0" prefWidth="1120.0" style="-fx-background-color: #1e242b;">
+            <AnchorPane fx:id="Home_Page" layoutY="51.0" prefHeight="601.0" prefWidth="1120.0" style="-fx-background-color: #1e242b;">
                <children>
                   <AnchorPane fx:id="WordScreenTopPane" prefHeight="45.0" prefWidth="1120.0" style="-fx-background-color: #9FADBC; -fx-background-radius: 6 6 0 0;">
                      <children>
@@ -292,7 +292,11 @@
                         </DropShadow>
                      </effect>
                   </AnchorPane>
-                  <ScrollPane fx:id="HomePage_WordsScreenScrollPane" layoutY="45.0" prefHeight="560.0" prefViewportWidth="128.0" prefWidth="1120.0" style="-fx-background-color: #37404a;" />
+                  <ScrollPane hbarPolicy="NEVER" layoutX="-1.0" layoutY="45.0" prefHeight="556.0" prefWidth="1121.0" style="-fx-background-color: #3c424a;">
+                     <content>
+                        <AnchorPane fx:id="WordCard_Screen" prefHeight="560.0" prefWidth="1102.0" style="-fx-background-color: #3c424a;" />
+                     </content>
+                  </ScrollPane>
                </children>
             </AnchorPane>
          </children>
