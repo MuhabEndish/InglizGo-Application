@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Rectangle2D?>
@@ -18,288 +17,368 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="Program_StackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1120.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.inglizgo_v3.MainFormController">
-   <children>
-      <AnchorPane fx:id="mainForm_mainPane" prefHeight="650.0" prefWidth="1120.0" style="-fx-background-color: #1e242b;">
+<StackPane fx:id="Program_StackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+           minWidth="-Infinity" prefHeight="650.0" prefWidth="1120.0" xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.inglizgo_v3.MainFormController">
+   <AnchorPane fx:id="mainForm_mainPane" prefHeight="650.0" prefWidth="1120.0" style="-fx-background-color: #1e242b;">
+      <AnchorPane fx:id="UserInfo_pane" layoutY="51.0" prefHeight="590.0" prefWidth="1120.0"
+                  style="-fx-background-color: #1e242b;">
+         <AnchorPane fx:id="UserInfo_mainPane" prefHeight="600.0" prefWidth="1120.0"
+                     style="-fx-background-color: #1e242b;">
+            <children>
+               <AnchorPane fx:id="userInfo_userImageContainer" layoutX="473.0" layoutY="74.0" prefHeight="200.0"
+                           prefWidth="200.0" style="-fx-border-color: #40a2e3; -fx-border-radius: 4;">
+                  <children>
+                     <Pane fx:id="defaultUserImagePane" layoutX="2.0" layoutY="2.0" prefHeight="200.0"
+                           prefWidth="200.0" style="-fx-background-color: #bfbfb6; -fx-background-radius: 4;">
+                        <children>
+                           <FontAwesomeIcon fill="WHITE" glyphName="USER" layoutX="23.0" layoutY="181.0"
+                                            size="13em"/>
+                        </children>
+                     </Pane>
+                     <ImageView fx:id="userInfo_ImageView" cache="true" fitHeight="200.0" fitWidth="200.0"
+                                layoutX="2.0" layoutY="2.0" nodeOrientation="INHERIT" pickOnBounds="true">
+                        <viewport>
+                           <Rectangle2D/>
+                        </viewport>
+                     </ImageView>
+                  </children>
+               </AnchorPane>
+               <Button fx:id="userInfo_changeImage" layoutX="525.0" layoutY="261.0" mnemonicParsing="false"
+                       onAction="#chooseImage" prefHeight="32.0" prefWidth="30.0"
+                       style="-fx-background-radius: 20; -fx-background-color: #40a2e3;" stylesheets="@style.css">
+                  <effect>
+                     <DropShadow blurType="GAUSSIAN" height="10.0" radius="4.5" width="10.0">
+                        <color>
+                           <Color red="0.12960000336170197" green="0.14975999295711517" blue="0.18000000715255737"
+                                  opacity="0.7490347623825073"/>
+                        </color>
+                     </DropShadow>
+                  </effect>
+                  <graphic>
+                     <FontAwesomeIcon fill="WHITE" glyphName="CAMERA" size="0.85em"/>
+                  </graphic>
+                  <cursor>
+                     <Cursor fx:constant="HAND"/>
+                  </cursor>
+               </Button>
+               <Label fx:id="userInfo_UserName" layoutX="520.0" layoutY="323.0" prefHeight="32.0"
+                      prefWidth="141.0" style="-fx-border-color: #40a2e3; -fx-border-radius: 0 8 8 0;"
+                      text="UserName" textFill="#f8f8f8">
+                  <graphic>
+                     <Button fx:id="userInfo_EditUserNameBtn" mnemonicParsing="false" onAction="#EditUsername"
+                             prefHeight="31.0" prefWidth="5.0"
+                             style="-fx-background-color: #40a2e3; -fx-background-radius: 8 0 0 8;"
+                             translateX="-31.0" translateY="-1.0">
+                        <graphic>
+                           <FontAwesomeIcon fill="WHITE" glyphName="PENCIL" size="15"/>
+                        </graphic>
+                        <cursor>
+                           <Cursor fx:constant="HAND"/>
+                        </cursor>
+                     </Button>
+                  </graphic>
+                  <font>
+                     <Font size="14.0"/>
+                  </font>
+               </Label>
+               <Button fx:id="userInfo_ChangePasswordBtn" layoutX="462.0" layoutY="384.0" mnemonicParsing="false"
+                       onAction="#switchBetweenFroms" prefHeight="31.0" prefWidth="226.0"
+                       style="-fx-background-color: #40a2e3; -fx-background-radius: 15;" text="Change Password"
+                       textFill="WHITE">
+                  <font>
+                     <Font size="13.0"/>
+                  </font>
+                  <cursor>
+                     <Cursor fx:constant="HAND"/>
+                  </cursor>
+               </Button>
+               <Button fx:id="userInfo_DeleteAccountBtn" layoutX="462.0" layoutY="455.0" mnemonicParsing="false"
+                       onAction="#switchBetweenFroms" prefHeight="31.0" prefWidth="226.0"
+                       style="-fx-background-color: red; -fx-background-radius: 15;" text="Delete Account"
+                       textFill="WHITE">
+                  <font>
+                     <Font size="13.0"/>
+                  </font>
+                  <cursor>
+                     <Cursor fx:constant="HAND"/>
+                  </cursor>
+               </Button>
+               <Button fx:id="userInfo_DeleteUserImageBtn" layoutX="590.0" layoutY="261.0" mnemonicParsing="false"
+                       onAction="#emptyUserImageView" prefHeight="32.0" prefWidth="32.0"
+                       style="-fx-background-radius: 20; -fx-background-color: red;" stylesheets="@style.css">
+                  <effect>
+                     <DropShadow blurType="GAUSSIAN" height="10.0" radius="4.5" width="10.0">
+                        <color>
+                           <Color red="0.12960000336170197" green="0.14975999295711517" blue="0.18000000715255737"
+                                  opacity="0.7490347623825073"/>
+                        </color>
+                     </DropShadow>
+                  </effect>
+                  <graphic>
+                     <FontAwesomeIcon fill="WHITE" glyphName="TRASH" size="1.1em"/>
+                  </graphic>
+                  <cursor>
+                     <Cursor fx:constant="HAND"/>
+                  </cursor>
+               </Button>
+               <TextField fx:id="UserInfo_NewUsernameText" centerShape="false" layoutX="522.0" layoutY="323.0"
+                          prefHeight="32.0" prefWidth="141.0" promptText="New Username"
+                          style="-fx-background-radius: 0 8 8 0;" visible="false">
+                  <opaqueInsets>
+                     <Insets/>
+                  </opaqueInsets>
+               </TextField>
+               <Button fx:id="UserInfo_ConfirmNewUsername" layoutX="488.0" layoutY="323.0" mnemonicParsing="false"
+                       onAction="#ConfirmNewUsername" prefHeight="31.0" prefWidth="27.0"
+                       style="-fx-background-radius: 8 0 0 8; -fx-background-color: #40a2e3;" visible="false">
+                  <graphic>
+                     <FontAwesomeIcon fill="WHITE" glyphName="CHECK"/>
+                  </graphic>
+               </Button>
+            </children>
+         </AnchorPane>
+         <AnchorPane fx:id="UserInfo_ChangePasswordPane" prefHeight="600.0" prefWidth="1120.0"
+                     style="-fx-background-color: #1e242b;" visible="false">
+            <children>
+               <Label fx:id="ChangePasswordPane_ChangePasswordLbl" layoutX="400.0" layoutY="90.0"
+                      prefHeight="29.0" prefWidth="215.0" text="Change Password" textFill="WHITE">
+                  <font>
+                     <Font name="Roboto Medium" size="26.0"/>
+                  </font>
+               </Label>
+               <Label fx:id="ChangePasswordPane_ChangePasswordLbl2" layoutX="400.0" layoutY="130.0"
+                      text="The password must be at least 8 characters long." textFill="#eeeeee">
+                  <font>
+                     <Font name="Roboto Medium" size="15.0"/>
+                  </font>
+               </Label>
+               <PasswordField fx:id="changePassword_CurrentPssword" layoutX="447.0" layoutY="188.0"
+                              prefHeight="31.0" prefWidth="226.0" promptText="Current Password"/>
+               <PasswordField fx:id="ChangePasswordPane_NewPassword" layoutX="447.0" layoutY="253.0"
+                              prefHeight="31.0" prefWidth="226.0" promptText="New Password"/>
+               <PasswordField fx:id="ChangePasswordPane_ConfirmPassword" layoutX="447.0" layoutY="300.0"
+                              prefHeight="31.0" prefWidth="226.0" promptText="Confirm Password"/>
+               <Hyperlink fx:id="ChangePasswordPane_ForgotPassword" layoutX="448.0" layoutY="334.0"
+                          text="Forgot Password?"/>
+               <Button fx:id="ChangePasswordPane_ChangePasswordBtn" layoutX="447.0" layoutY="384.0"
+                       mnemonicParsing="false" onAction="#changePasswordFromUserInfoPane" prefHeight="31.0"
+                       prefWidth="226.0"
+                       style="-fx-background-color: #40a2e3; -fx-background-radius: 20; -fx-font-family: Roboto Medium;"
+                       text="Change Pssword" textFill="WHITE"/>
+               <Button fx:id="ChangePasswordPane_CancelChangeBtn" layoutX="447.0" layoutY="432.0"
+                       mnemonicParsing="false" onAction="#switchBetweenFroms" prefHeight="31.0" prefWidth="226.0"
+                       style="-fx-background-color: #454c54; -fx-background-radius: 20; -fx-font-family: Roboto Medium;"
+                       text="Cancel" textFill="WHITE"/>
+            </children>
+         </AnchorPane>
+         <AnchorPane fx:id="DeleteAccountPane" prefHeight="600.0" prefWidth="1120.0"
+                     style="-fx-background-color: #1e242b;" visible="false">
+            <children>
+               <Label fx:id="DeleteAccountPaneIfYouLbl" contentDisplay="CENTER" ellipsisString="" layoutX="274.0"
+                      layoutY="154.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="269.0"
+                      style="-fx-font-family: Robot Black; -fx-font-weight: Bold;"
+                      text="Confirm Deleting Account :" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                  <font>
+                     <Font size="20.0"/>
+                  </font>
+               </Label>
+               <Label fx:id="DeleteAccountPaneAreYouLbl1" contentDisplay="CENTER" ellipsisString=""
+                      layoutX="274.0" layoutY="195.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="460.0"
+                      style="-fx-font-family: Robot Black;"
+                      text="Please enter  your password to delete your account." textAlignment="CENTER"
+                      textFill="WHITE" wrapText="true">
+                  <font>
+                     <Font size="20.0"/>
+                  </font>
+               </Label>
+               <PasswordField fx:id="confirmDeletePasswordField" layoutX="515.0" layoutY="257.0" prefHeight="31.0"
+                              prefWidth="215.0" promptText="Current Password"/>
+               <Button fx:id="DeleteAccountCancelBtn" layoutX="379.0" layoutY="340.0" mnemonicParsing="false"
+                       onAction="#switchBetweenFroms" prefHeight="31.0" prefWidth="128.0"
+                       style="-fx-background-color: #40a2e3; -fx-background-radius: 20;" text="Cancel"
+                       textFill="WHITE"/>
+               <Button fx:id="DeleteAccountYesBtn" layoutX="622.0" layoutY="340.0" mnemonicParsing="false"
+                       onAction="#deleteAccount" prefHeight="31.0" prefWidth="128.0"
+                       style="-fx-background-color: red; -fx-background-radius: 20;" text="Yes, Delete"
+                       textFill="WHITE">
+                  <font>
+                     <Font name="Roboto Light" size="15.0"/>
+                  </font>
+               </Button>
+            </children>
+         </AnchorPane>
+      </AnchorPane>
+      <AnchorPane fx:id="mainForm_AddCardPane" layoutY="51.0" prefHeight="600.0" prefWidth="1120.0"
+                  style="-fx-background-color: #1e242b;" visible="false">
          <children>
-            <AnchorPane fx:id="UserInfo_pane" layoutY="51.0" prefHeight="590.0" prefWidth="1120.0" style="-fx-background-color: #1e242b;">
+            <AnchorPane fx:id="lowerPane_WordCard" layoutX="5.0" layoutY="6.0" prefHeight="595.0" prefWidth="1110.0"
+                        style="-fx-background-color: #37404a; -fx-background-radius: 6 6 0 0;">
                <children>
-                  <AnchorPane fx:id="UserInfo_mainPane" prefHeight="600.0" prefWidth="1120.0" style="-fx-background-color: #1e242b;">
-                     <children>
-                        <AnchorPane fx:id="userInfo_userImageContainer" layoutX="473.0" layoutY="74.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #40a2e3; -fx-border-radius: 4;">
-                           <children>
-                              <Pane fx:id="defaultUserImagePane" layoutX="2.0" layoutY="2.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #bfbfb6; -fx-background-radius: 4;">
-                                 <children>
-                                    <FontAwesomeIcon fill="WHITE" glyphName="USER" layoutX="23.0" layoutY="181.0" size="13em" />
-                                 </children>
-                              </Pane>
-                              <ImageView fx:id="userInfo_ImageView" cache="true" fitHeight="200.0" fitWidth="200.0" layoutX="2.0" layoutY="2.0" nodeOrientation="INHERIT" pickOnBounds="true">
-                                 <viewport>
-                                    <Rectangle2D />
-                                 </viewport>
-                              </ImageView>
-                           </children>
-                        </AnchorPane>
-                        <Button fx:id="userInfo_changeImage" layoutX="525.0" layoutY="261.0" mnemonicParsing="false" onAction="#chooseImage" prefHeight="32.0" prefWidth="30.0" style="-fx-background-radius: 20; -fx-background-color: #40a2e3;" stylesheets="@style.css">
-                           <effect>
-                              <DropShadow blurType="GAUSSIAN" height="10.0" radius="4.5" width="10.0">
-                                 <color>
-                                    <Color red="0.12960000336170197" green="0.14975999295711517" blue="0.18000000715255737" opacity="0.7490347623825073" />
-                                 </color>
-                              </DropShadow>
-                           </effect>
-                           <graphic>
-                              <FontAwesomeIcon fill="WHITE" glyphName="CAMERA" size="0.85em" />
-                           </graphic>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                        <Label fx:id="userInfo_UserName" layoutX="520.0" layoutY="323.0" prefHeight="32.0" prefWidth="141.0" style="-fx-border-color: #40a2e3; -fx-border-radius: 0 8 8 0;" text="UserName" textFill="#f8f8f8">
-                           <graphic>
-                              <Button fx:id="userInfo_EditUserNameBtn" mnemonicParsing="false" onAction="#EditUsername" prefHeight="31.0" prefWidth="5.0" style="-fx-background-color: #40a2e3; -fx-background-radius: 8 0 0 8;" translateX="-31.0" translateY="-1.0">
-                                 <graphic>
-                                    <FontAwesomeIcon fill="WHITE" glyphName="PENCIL" size="15" />
-                                 </graphic>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </Button>
-                           </graphic>
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Button fx:id="userInfo_ChangePasswordBtn" layoutX="462.0" layoutY="384.0" mnemonicParsing="false" onAction="#switchBetweenFroms" prefHeight="31.0" prefWidth="226.0" style="-fx-background-color: #40a2e3; -fx-background-radius: 15;" text="Change Password" textFill="WHITE">
-                           <font>
-                              <Font size="13.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                        <Button fx:id="userInfo_DeleteAccountBtn" layoutX="462.0" layoutY="455.0" mnemonicParsing="false" onAction="#switchBetweenFroms" prefHeight="31.0" prefWidth="226.0" style="-fx-background-color: red; -fx-background-radius: 15;" text="Delete Account" textFill="WHITE">
-                           <font>
-                              <Font size="13.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                        <Button fx:id="userInfo_DeleteUserImageBtn" layoutX="590.0" layoutY="261.0" mnemonicParsing="false" onAction="#emptyUserImageView" prefHeight="32.0" prefWidth="32.0" style="-fx-background-radius: 20; -fx-background-color: red;" stylesheets="@style.css">
-                           <effect>
-                              <DropShadow blurType="GAUSSIAN" height="10.0" radius="4.5" width="10.0">
-                                 <color>
-                                    <Color red="0.12960000336170197" green="0.14975999295711517" blue="0.18000000715255737" opacity="0.7490347623825073" />
-                                 </color>
-                              </DropShadow>
-                           </effect>
-                           <graphic>
-                              <FontAwesomeIcon fill="WHITE" glyphName="TRASH" size="1.1em" />
-                           </graphic>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                        <TextField fx:id="UserInfo_NewUsernameText" centerShape="false" layoutX="522.0" layoutY="323.0" prefHeight="32.0" prefWidth="141.0" promptText="New Username" style="-fx-background-radius: 0 8 8 0;" visible="false">
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
-                        </TextField>
-                        <Button fx:id="UserInfo_ConfirmNewUsername" layoutX="488.0" layoutY="323.0" mnemonicParsing="false" onAction="#ConfirmNewUsername" prefHeight="31.0" prefWidth="27.0" style="-fx-background-radius: 8 0 0 8; -fx-background-color: #40a2e3;" visible="false">
-                           <graphic>
-                              <FontAwesomeIcon fill="WHITE" glyphName="CHECK" />
-                           </graphic>
-                        </Button>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane fx:id="UserInfo_ChangePasswordPane" prefHeight="600.0" prefWidth="1120.0" style="-fx-background-color: #1e242b;" visible="false">
-                     <children>
-                        <Label fx:id="ChangePasswordPane_ChangePasswordLbl" layoutX="400.0" layoutY="90.0" prefHeight="29.0" prefWidth="215.0" text="Change Password" textFill="WHITE">
-                           <font>
-                              <Font name="Roboto Medium" size="26.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="ChangePasswordPane_ChangePasswordLbl2" layoutX="400.0" layoutY="130.0" text="The password must be at least 8 characters long." textFill="#eeeeee">
-                           <font>
-                              <Font name="Roboto Medium" size="15.0" />
-                           </font>
-                        </Label>
-                        <PasswordField fx:id="changePassword_CurrentPssword" layoutX="447.0" layoutY="188.0" prefHeight="31.0" prefWidth="226.0" promptText="Current Password" />
-                        <PasswordField fx:id="ChangePasswordPane_NewPassword" layoutX="447.0" layoutY="253.0" prefHeight="31.0" prefWidth="226.0" promptText="New Password" />
-                        <PasswordField fx:id="ChangePasswordPane_ConfirmPassword" layoutX="447.0" layoutY="300.0" prefHeight="31.0" prefWidth="226.0" promptText="Confirm Password" />
-                        <Hyperlink fx:id="ChangePasswordPane_ForgotPassword" layoutX="448.0" layoutY="334.0" text="Forgot Password?" />
-                        <Button fx:id="ChangePasswordPane_ChangePasswordBtn" layoutX="447.0" layoutY="384.0" mnemonicParsing="false" onAction="#changePasswordFromUserInfoPane" prefHeight="31.0" prefWidth="226.0" style="-fx-background-color: #40a2e3; -fx-background-radius: 20; -fx-font-family: Roboto Medium;" text="Change Pssword" textFill="WHITE" />
-                        <Button fx:id="ChangePasswordPane_CancelChangeBtn" layoutX="447.0" layoutY="432.0" mnemonicParsing="false" onAction="#switchBetweenFroms" prefHeight="31.0" prefWidth="226.0" style="-fx-background-color: #454c54; -fx-background-radius: 20; -fx-font-family: Roboto Medium;" text="Cancel" textFill="WHITE" />
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane fx:id="DeleteAccountPane" prefHeight="600.0" prefWidth="1120.0" style="-fx-background-color: #1e242b;" visible="false">
-                     <children>
-                        <Label fx:id="DeleteAccountPaneIfYouLbl" contentDisplay="CENTER" ellipsisString="" layoutX="274.0" layoutY="154.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="269.0" style="-fx-font-family: Robot Black; -fx-font-weight: Bold;" text="Confirm Deleting Account :" textAlignment="CENTER" textFill="WHITE" wrapText="true">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="DeleteAccountPaneAreYouLbl1" contentDisplay="CENTER" ellipsisString="" layoutX="274.0" layoutY="195.0" lineSpacing="5.0" prefHeight="35.0" prefWidth="460.0" style="-fx-font-family: Robot Black;" text="Please enter  your password to delete your account." textAlignment="CENTER" textFill="WHITE" wrapText="true">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                        <PasswordField fx:id="confirmDeletePasswordField" layoutX="515.0" layoutY="257.0" prefHeight="31.0" prefWidth="215.0" promptText="Current Password" />
-                        <Button fx:id="DeleteAccountCancelBtn" layoutX="379.0" layoutY="340.0" mnemonicParsing="false" onAction="#switchBetweenFroms" prefHeight="31.0" prefWidth="128.0" style="-fx-background-color: #40a2e3; -fx-background-radius: 20;" text="Cancel" textFill="WHITE" />
-                        <Button fx:id="DeleteAccountYesBtn" layoutX="622.0" layoutY="340.0" mnemonicParsing="false" onAction="#deleteAccount" prefHeight="31.0" prefWidth="128.0" style="-fx-background-color: red; -fx-background-radius: 20;" text="Yes, Delete" textFill="WHITE">
-                           <font>
-                              <Font name="Roboto Light" size="15.0" />
-                           </font>
-                        </Button>
-                     </children>
-                  </AnchorPane>
-               </children>
-            </AnchorPane>
-            <AnchorPane fx:id="mainForm_AddCardPane" layoutY="51.0" prefHeight="600.0" prefWidth="1120.0" style="-fx-background-color: #1e242b;" visible="false">
-               <children>
-                  <AnchorPane fx:id="lowerPane_WordCard" layoutX="5.0" layoutY="6.0" prefHeight="595.0" prefWidth="1110.0" style="-fx-background-color: #37404a; -fx-background-radius: 6 6 0 0;">
-                     <children>
-                        <TextField fx:id="WordCard_addWord" layoutX="231.0" layoutY="110.0" prefHeight="31.0" prefWidth="269.0" promptText="Add word (English)" style="-fx-background-radius: 8;" />
-                        <TextField fx:id="WordCard_Translate" layoutX="232.0" layoutY="157.0" prefHeight="31.0" prefWidth="269.0" promptText="Tranlate (Turkish)" style="-fx-background-radius: 8;" />
-                        <TextField fx:id="WordCard_FirstEx" layoutX="231.0" layoutY="205.0" prefHeight="31.0" prefWidth="269.0" promptText="First Ex." style="-fx-background-radius: 8;" />
-                        <TextField fx:id="WordCard_SecondEx" layoutX="231.0" layoutY="253.0" prefHeight="31.0" prefWidth="269.0" promptText="Second Ex." style="-fx-background-radius: 8;" />
-                        <Button fx:id="WordCard_uploadImageBtn" layoutX="231.0" layoutY="301.0" mnemonicParsing="false" onAction="#chooseImage" prefHeight="27.0" prefWidth="269.0" style="-fx-background-color: #40a2e3; -fx-background-radius: 30;" text="Upload Image" textFill="WHITE">
-                           <font>
-                              <Font name="SansSerif Regular" size="15.0" />
-                           </font>
-                        </Button>
-                        <FontAwesomeIcon fill="#ffffff7e" glyphName="IMAGE" layoutX="740.0" layoutY="239.0" size="100" />
-                        <ImageView fx:id="WordCard_uploadedImageView" fitHeight="151.0" fitWidth="215.0" layoutX="686.0" layoutY="129.0" pickOnBounds="true" preserveRatio="true" />
-                        <Button layoutX="418.0" layoutY="430.0" mnemonicParsing="false" onAction="#saveWordCardToDatabase" prefHeight="43.0" prefWidth="333.0" style="-fx-background-color: #40a2e3; -fx-background-radius: 30;" text="SAVE CART" textFill="WHITE">
-                           <font>
-                              <Font name="Microsoft Sans Serif" size="15.0" />
-                           </font>
-                        </Button>
-                     </children>
-                  </AnchorPane>
-               </children>
-            </AnchorPane>
-            <AnchorPane fx:id="mainForm_upperPane" prefHeight="51.0" prefWidth="1120.0" style="-fx-background-color: #222831;">
-               <children>
-                  <Label fx:id="upperPane_logo" layoutX="38.0" layoutY="8.0" prefHeight="35.0" prefWidth="115.0" text="Inglizgo" textFill="WHITE">
+                  <TextField fx:id="WordCard_addWord" layoutX="231.0" layoutY="110.0" prefHeight="31.0"
+                             prefWidth="269.0" promptText="Add word (English)" style="-fx-background-radius: 8;"/>
+                  <TextField fx:id="WordCard_Translate" layoutX="232.0" layoutY="157.0" prefHeight="31.0"
+                             prefWidth="269.0" promptText="Tranlate (Turkish)" style="-fx-background-radius: 8;"/>
+                  <TextField fx:id="WordCard_FirstEx" layoutX="231.0" layoutY="205.0" prefHeight="31.0"
+                             prefWidth="269.0" promptText="First Ex." style="-fx-background-radius: 8;"/>
+                  <TextField fx:id="WordCard_SecondEx" layoutX="231.0" layoutY="253.0" prefHeight="31.0"
+                             prefWidth="269.0" promptText="Second Ex." style="-fx-background-radius: 8;"/>
+                  <Button fx:id="WordCard_uploadImageBtn" layoutX="231.0" layoutY="301.0" mnemonicParsing="false"
+                          onAction="#chooseImage" prefHeight="27.0" prefWidth="269.0"
+                          style="-fx-background-color: #40a2e3; -fx-background-radius: 30;" text="Upload Image"
+                          textFill="WHITE">
                      <font>
-                        <Font name="Roboto Bold Italic" size="28.0" />
+                        <Font name="SansSerif Regular" size="15.0"/>
                      </font>
-                  </Label>
-                  <Button fx:id="upperPane_QuestionBtn" layoutX="296.0" layoutY="10.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="38.0" style="-fx-background-color: #40a2e3;">
-                     <effect>
-                        <DropShadow blurType="GAUSSIAN" height="10.0" radius="4.5" width="10.0">
-                           <color>
-                              <Color opacity="0.6023166179656982" />
-                           </color>
-                        </DropShadow>
-                     </effect>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                     <graphic>
-                        <FontAwesomeIcon fill="WHITE" glyphName="TASKS" size="18" />
-                     </graphic>
                   </Button>
-                  <Button fx:id="upperPane_SettingsBtn" layoutX="244.0" layoutY="10.0" mnemonicParsing="false" onAction="#switchBetweenFroms" prefHeight="31.0" prefWidth="38.0" style="-fx-background-color: #40a2e3;">
-                     <effect>
-                        <DropShadow blurType="GAUSSIAN" height="10.0" radius="4.5" width="10.0">
-                           <color>
-                              <Color opacity="0.6000000238418579" />
-                           </color>
-                        </DropShadow>
-                     </effect>
-                     <graphic>
-                        <FontAwesomeIcon depthTest="ENABLE" fill="WHITE" glyphName="COG" size="20" />
-                     </graphic>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-                  <Button fx:id="upperPane_HomeBtn" layoutX="191.0" layoutY="10.0" mnemonicParsing="false" onAction="#switchBetweenFroms" prefHeight="31.0" prefWidth="38.0" style="-fx-background-color: #40a2e3;">
-                     <effect>
-                        <DropShadow blurType="GAUSSIAN" height="10.0" radius="4.5" width="10.0">
-                           <color>
-                              <Color opacity="0.6000000238418579" />
-                           </color>
-                        </DropShadow>
-                     </effect>
-                     <graphic>
-                        <FontAwesomeIcon depthTest="ENABLE" fill="WHITE" glyphName="HOME" size="20" />
-                     </graphic>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-                  <Label fx:id="upperPane_userName" layoutX="830.0" layoutY="15.0" prefHeight="21.0" prefWidth="169.0" style="-fx-font-family: Robot; -fx-font-weight: bold;" textFill="WHITE">
+                  <FontAwesomeIcon fill="#ffffff7e" glyphName="IMAGE" layoutX="740.0" layoutY="239.0" size="100"/>
+                  <ImageView fx:id="WordCard_uploadedImageView" fitHeight="151.0" fitWidth="215.0" layoutX="686.0"
+                             layoutY="129.0" pickOnBounds="true" preserveRatio="true"/>
+                  <Button layoutX="418.0" layoutY="430.0" mnemonicParsing="false" onAction="#saveWordCardToDatabase"
+                          prefHeight="43.0" prefWidth="333.0"
+                          style="-fx-background-color: #40a2e3; -fx-background-radius: 30;" text="SAVE CART"
+                          textFill="WHITE">
                      <font>
-                        <Font name="Roboto Bold" size="15.0" />
+                        <Font name="Microsoft Sans Serif" size="15.0"/>
                      </font>
-                  </Label>
-                  <Button fx:id="upperPane_signOutBtn" layoutX="1067.0" layoutY="8.0" mnemonicParsing="false" onAction="#signOut" prefHeight="35.0" prefWidth="39.0" style="-fx-background-color: NONE;" textFill="WHITE">
-                     <graphic>
-                        <FontAwesomeIcon fx:id="upperPane_SignoutBtn" fill="WHITE" glyphName="SIGN_OUT" size="25" />
-                     </graphic>
-                     <font>
-                        <Font size="10.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
                   </Button>
-                  <AnchorPane fx:id="userInfo_userImageContainer1" layoutX="1020.0" layoutY="8.0" prefHeight="30.0" prefWidth="30.0" style="-fx-border-color: #40a2e3; -fx-border-radius: 4;">
-                     <children>
-                        <Pane fx:id="defaultUserImagePane1" layoutX="2.0" layoutY="2.0" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: #bfbfb6; -fx-background-radius: 2;">
-                           <children>
-                              <FontAwesomeIcon fill="WHITE" glyphName="USER" layoutX="5.0" layoutY="26.0" size="1.7em" />
-                           </children>
-                        </Pane>
-                        <ImageView fx:id="userInfo_ImageView1" cache="true" fitHeight="30.0" fitWidth="30.0" layoutX="2.0" layoutY="2.0" nodeOrientation="INHERIT" pickOnBounds="true">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                     </children>
-                  </AnchorPane>
-               </children>
-            </AnchorPane>
-            <AnchorPane fx:id="Home_Page" layoutY="51.0" prefHeight="601.0" prefWidth="1120.0" style="-fx-background-color: #1e242b;">
-               <children>
-                  <AnchorPane fx:id="WordScreenTopPane" prefHeight="45.0" prefWidth="1120.0" style="-fx-background-color: #9FADBC; -fx-background-radius: 6 6 0 0;">
-                     <children>
-                        <Button fx:id="HomePage_AddCardBtn" layoutX="958.0" layoutY="9.0" mnemonicParsing="false" onAction="#switchBetweenFroms" style="-fx-background-color: #40a2e3;" text="Add Card" textFill="WHITE">
-                           <font>
-                              <Font name="Arial" size="15.0" />
-                           </font>
-                           <effect>
-                              <DropShadow height="10.0" radius="4.5" width="10.0">
-                                 <color>
-                                    <Color red="0.02997075952589512" green="0.35265594720840454" blue="0.5394737124443054" />
-                                 </color>
-                              </DropShadow>
-                           </effect>
-                           <graphic>
-                              <FontAwesomeIcon fill="WHITE" glyphName="PLUS" />
-                           </graphic>
-                        </Button>
-                     </children>
-                     <effect>
-                        <DropShadow blurType="GAUSSIAN">
-                           <color>
-                              <Color red="0.1836622804403305" green="0.18411915004253387" blue="0.19736842811107635" />
-                           </color>
-                        </DropShadow>
-                     </effect>
-                  </AnchorPane>
-                  <ScrollPane hbarPolicy="NEVER" layoutX="-1.0" layoutY="45.0" prefHeight="556.0" prefWidth="1121.0" style="-fx-background-color: #3c424a;">
-                     <content>
-                        <AnchorPane fx:id="WordCard_Screen" prefHeight="560.0" prefWidth="1102.0" style="-fx-background-color: #3c424a;" />
-                     </content>
-                  </ScrollPane>
                </children>
             </AnchorPane>
          </children>
       </AnchorPane>
-   </children>
+      <AnchorPane fx:id="mainForm_upperPane" prefHeight="51.0" prefWidth="1120.0"
+                  style="-fx-background-color: #222831;">
+         <children>
+            <Label fx:id="upperPane_logo" layoutX="38.0" layoutY="8.0" prefHeight="35.0" prefWidth="115.0"
+                   text="Inglizgo" textFill="WHITE">
+               <font>
+                  <Font name="Roboto Bold Italic" size="28.0"/>
+               </font>
+            </Label>
+            <Button fx:id="upperPane_QuestionBtn" layoutX="296.0" layoutY="10.0" mnemonicParsing="false"
+                    prefHeight="31.0" prefWidth="38.0" style="-fx-background-color: #40a2e3;">
+               <effect>
+                  <DropShadow blurType="GAUSSIAN" height="10.0" radius="4.5" width="10.0">
+                     <color>
+                        <Color opacity="0.6023166179656982"/>
+                     </color>
+                  </DropShadow>
+               </effect>
+               <cursor>
+                  <Cursor fx:constant="HAND"/>
+               </cursor>
+               <graphic>
+                  <FontAwesomeIcon fill="WHITE" glyphName="TASKS" size="18"/>
+               </graphic>
+            </Button>
+            <Button fx:id="upperPane_SettingsBtn" layoutX="244.0" layoutY="10.0" mnemonicParsing="false"
+                    onAction="#switchBetweenFroms" prefHeight="31.0" prefWidth="38.0"
+                    style="-fx-background-color: #40a2e3;">
+               <effect>
+                  <DropShadow blurType="GAUSSIAN" height="10.0" radius="4.5" width="10.0">
+                     <color>
+                        <Color opacity="0.6000000238418579"/>
+                     </color>
+                  </DropShadow>
+               </effect>
+               <graphic>
+                  <FontAwesomeIcon depthTest="ENABLE" fill="WHITE" glyphName="COG" size="20"/>
+               </graphic>
+               <cursor>
+                  <Cursor fx:constant="HAND"/>
+               </cursor>
+            </Button>
+            <Button fx:id="upperPane_HomeBtn" layoutX="191.0" layoutY="10.0" mnemonicParsing="false"
+                    onAction="#switchBetweenFroms" prefHeight="31.0" prefWidth="38.0"
+                    style="-fx-background-color: #40a2e3;">
+               <effect>
+                  <DropShadow blurType="GAUSSIAN" height="10.0" radius="4.5" width="10.0">
+                     <color>
+                        <Color opacity="0.6000000238418579"/>
+                     </color>
+                  </DropShadow>
+               </effect>
+               <graphic>
+                  <FontAwesomeIcon depthTest="ENABLE" fill="WHITE" glyphName="HOME" size="20"/>
+               </graphic>
+               <cursor>
+                  <Cursor fx:constant="HAND"/>
+               </cursor>
+            </Button>
+            <Label fx:id="upperPane_userName" layoutX="830.0" layoutY="15.0" prefHeight="21.0" prefWidth="169.0"
+                   style="-fx-font-family: Robot; -fx-font-weight: bold;" textFill="WHITE">
+               <font>
+                  <Font name="Roboto Bold" size="15.0"/>
+               </font>
+            </Label>
+            <Button fx:id="upperPane_signOutBtn" layoutX="1067.0" layoutY="8.0" mnemonicParsing="false"
+                    onAction="#signOut" prefHeight="35.0" prefWidth="39.0" style="-fx-background-color: NONE;"
+                    textFill="WHITE">
+               <graphic>
+                  <FontAwesomeIcon fx:id="upperPane_SignoutBtn" fill="WHITE" glyphName="SIGN_OUT" size="25"/>
+               </graphic>
+               <font>
+                  <Font size="10.0"/>
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND"/>
+               </cursor>
+            </Button>
+            <AnchorPane fx:id="userInfo_userImageContainer1" layoutX="1020.0" layoutY="8.0" prefHeight="30.0"
+                        prefWidth="30.0" style="-fx-border-color: #40a2e3; -fx-border-radius: 4;">
+               <children>
+                  <Pane fx:id="defaultUserImagePane1" layoutX="2.0" layoutY="2.0" prefHeight="30.0" prefWidth="30.0"
+                        style="-fx-background-color: #bfbfb6; -fx-background-radius: 2;">
+                     <children>
+                        <FontAwesomeIcon fill="WHITE" glyphName="USER" layoutX="5.0" layoutY="26.0" size="1.7em"/>
+                     </children>
+                  </Pane>
+                  <ImageView fx:id="userInfo_ImageView1" cache="true" fitHeight="30.0" fitWidth="30.0" layoutX="2.0"
+                             layoutY="2.0" nodeOrientation="INHERIT" pickOnBounds="true">
+                     <viewport>
+                        <Rectangle2D/>
+                     </viewport>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="Home_Page" layoutY="51.0" prefHeight="555.0" prefWidth="1120.0"
+                  style="-fx-background-color: #1e242b;">
+         <children>
+            <AnchorPane fx:id="WordScreenTopPane" prefHeight="45.0" prefWidth="1120.0"
+                        style="-fx-background-color: #9FADBC; -fx-background-radius: 6 6 0 0;">
+               <children>
+                  <Button fx:id="HomePage_AddCardBtn" layoutX="958.0" layoutY="9.0" mnemonicParsing="false"
+                          onAction="#switchBetweenFroms" style="-fx-background-color: #40a2e3;" text="Add Card"
+                          textFill="WHITE">
+                     <font>
+                        <Font name="Arial" size="15.0"/>
+                     </font>
+                     <effect>
+                        <DropShadow height="10.0" radius="4.5" width="10.0">
+                           <color>
+                              <Color red="0.02997075952589512" green="0.35265594720840454"
+                                     blue="0.5394737124443054"/>
+                           </color>
+                        </DropShadow>
+                     </effect>
+                     <graphic>
+                        <FontAwesomeIcon fill="WHITE" glyphName="PLUS"/>
+                     </graphic>
+                  </Button>
+               </children>
+               <effect>
+                  <DropShadow blurType="GAUSSIAN">
+                     <color>
+                        <Color red="0.1836622804403305" green="0.18411915004253387" blue="0.19736842811107635"/>
+                     </color>
+                  </DropShadow>
+               </effect>
+            </AnchorPane>
+            <ScrollPane fx:id="HomePage_WordsScreenScrollPane" layoutY="45.0" prefHeight="560.0"
+                        prefViewportWidth="128.0" prefWidth="1120.0" style="-fx-background-color: #37404a;"/>
+         </children>
+      </AnchorPane>
+   </AnchorPane>
 </StackPane>

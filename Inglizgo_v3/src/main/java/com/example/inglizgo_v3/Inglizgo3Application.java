@@ -17,11 +17,13 @@ public class Inglizgo3Application extends Application {
         stage.setTitle("Inglizgo");
         stage.setScene(scene);
 
-        // Load and set the application icon
-        //Image icon = new Image(""); // Replace "path_to_your_icon.png" with the path to your icon
-        //stage.getIcons().add(icon);
+//        // Load and set the application icon
+//        Image icon = new Image("");
+//        // Replace "path_to_your_icon.png" with the path to your icon
+//        stage.getIcons().add(icon);
 
         stage.show();
+
     }
 
 

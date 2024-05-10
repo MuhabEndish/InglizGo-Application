@@ -7,7 +7,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -118,24 +117,36 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
     private ResultSet result;
     private Statement statement;
 
-    //METHOD ESTABLISHES A CONNECTION TO A MySQL DATABASE NAMED "inglizgo" HOSTED ON THE LOCALHOST SERVER
+  //  METHOD ESTABLISHES A CONNECTION TO A MySQL DATABASE NAMED "inglizgo" HOSTED ON THE LOCALHOST SERVER
     public Connection connectDB(){
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             return DriverManager.getConnection(
-                    "jdbc:mysql://localhost/inglizgo","root","");
+                    "jdbc:mysql://localhost:4306/inglizgo","root","");
         }
         catch(Exception e){e.printStackTrace();}
         return null;
     }
 
-    public void Login(ActionEvent event) {
+
+
+
+
+
+
+    public void Login(){
+
         AlertMessage alert = new AlertMessage();
+        MainFormController mainformcontroller = new MainFormController();
 
         //CHECKS IF ANY FIELD IS EMPTY
-        if(Login_username.getText().isEmpty() || Login_password.getText().isEmpty()){
+        if(Login_username.getText().isEmpty()
+                || Login_password.getText().isEmpty()){
+
             alert.errorMessage("Incorrect Username or Password.");
-        } else {
+
+        }else {
+
             String selectData = "SELECT UserName , UserPassword FROM user_info WHERE "
                     +"UserName = ? and UserPassword = ? ";
 
@@ -144,7 +155,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
             //IF YOU CHANGED THE SHOWN PASSWORD FIELD THE PASSWORD FIELD CHANGES TOO
             if (Login_selectShowPass.isSelected()){
                 Login_password.setText(Login_shownPassword.getText());
-            } else {
+            }else {
                 Login_shownPassword.setText(Login_password.getText());
             }
 
@@ -166,11 +177,12 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
 
                     // Set the logged-in username in MainFormController
                     mainFormController.setLoggedInUsername(username);
-
                     // Load user image from the database
                     // Call loadUserImageFromDatabase method using the instance
                     Image userImage = mainFormController.loadUserImageFromDatabase(Login_username.getText());
+
                     mainFormController.setUserImage(userImage);
+
 
                     Stage stage = new Stage();
                     Scene scene = new Scene(root);
@@ -178,16 +190,19 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
                     stage.setScene(scene);
                     //TO SHOW THE MAIN FORM
                     stage.show();
-
-                    // Close the login window
-                    ((Node)(event.getSource())).getScene().getWindow().hide();
+                    //TO HIDE THE LOGIN WINDOW
+                    Login_btn.getScene().getWindow().hide();
 
                     alert.successMessage("Successfully Login!");
-                } else {
+                    //mainformcontroller.updateDisplayedWordCards();
+
+                }else{
                     //ELSE, THEN ERROR MESSAGE SHOWS UP
                     alert.errorMessage("Incorrect Username or Password.");
                 }
-            } catch (Exception e){
+
+            }
+            catch (Exception e){
                 e.printStackTrace();
             }
         }

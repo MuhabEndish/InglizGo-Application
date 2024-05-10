@@ -197,14 +197,13 @@ public class MainFormController implements Initializable {
     public String loggedInUsername; // Assuming username is used as the identifier
 
     //METHOD ESTABLISHES A CONNECTION TO A MySQL DATABASE NAMED "inglizgo" HOSTED ON THE LOCALHOST SERVER
-    public static Connection connectDB() {
-        try {
+    public Connection connectDB(){
+        try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             return DriverManager.getConnection(
-                    "jdbc:mysql://localhost/inglizgo", "root", "");
-        } catch (Exception e) {
-            e.printStackTrace();
+                    "jdbc:mysql://localhost:4306/inglizgo","root","");
         }
+        catch(Exception e){e.printStackTrace();}
         return null;
     }
 
@@ -684,8 +683,8 @@ public class MainFormController implements Initializable {
 
             // Create a VBox to hold the card containers with spacing
             VBox cardContainerBox = new VBox();
-             cardContainerBox.setSpacing(20); // Adjust spacing as needed
-             cardContainerBox.setAlignment(Pos.CENTER);// Align the card container box to the center
+            cardContainerBox.setSpacing(20); // Adjust spacing as needed
+            cardContainerBox.setAlignment(Pos.CENTER);// Align the card container box to the center
             //cardContainerBox.setPrefWidth(1102);
 
             cardContainerBox.setStyle("-fx-background-color: #00000000 ; -fx-pref-width: 1102; -fx-padding: 20px 10px;");
