@@ -28,7 +28,6 @@ import java.util.*;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -36,7 +35,7 @@ import javafx.stage.Stage;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
-import javafx.stage.Stage;
+
 
 
 
@@ -245,62 +244,36 @@ public class MainFormController implements Initializable {
             upperPane_userName.setText("Not logged in"); // Or any other default text you want to display
         }
     }
-
     @FXML
     public void switchBetweenFroms(ActionEvent event) {
-
         if (event.getSource() == upperPane_HomeBtn) {
             Home_Page.setVisible(true);
             UserInfo_pane.setVisible(false);
             mainForm_AddCardPane.setVisible(false);
-
+            fetchAndDisplayWordCards(); // Ensure this method properly fetches and displays cards
         } else if (event.getSource() == upperPane_SettingsBtn) {
             UserInfo_pane.setVisible(true);
             Home_Page.setVisible(false);
             mainForm_AddCardPane.setVisible(false);
             UserInfo_ChangePasswordPane.setVisible(false);
             DeleteAccountPane.setVisible(false);
-
         } else if (event.getSource() == upperPane_QuestionBtn) {
             Home_Page.setVisible(false);
             UserInfo_pane.setVisible(false);
             mainForm_AddCardPane.setVisible(false);
-
         } else if (event.getSource() == HomePage_AddCardBtn) {
             Home_Page.setVisible(false);
             UserInfo_pane.setVisible(false);
             mainForm_AddCardPane.setVisible(true);
-
-        } else if (event.getSource() == userInfo_ChangePasswordBtn) {
-            UserInfo_mainPane.setVisible(false);
-            UserInfo_ChangePasswordPane.setVisible(true);
-
-        } else if (event.getSource() == ChangePasswordPane_CancelChangeBtn) {
-            UserInfo_mainPane.setVisible(true);
-            UserInfo_ChangePasswordPane.setVisible(false);
-
-            changePassword_CurrentPssword.setText("");
-            ChangePasswordPane_NewPassword.setText("");
-            ChangePasswordPane_ConfirmPassword.setText("");
-
-        } else if (event.getSource() == userInfo_DeleteAccountBtn) {
-            UserInfo_mainPane.setVisible(false);
-            DeleteAccountPane.setVisible(true);
-
-        } else if (event.getSource() == DeleteAccountCancelBtn) {
-            UserInfo_mainPane.setVisible(true);
-            UserInfo_ChangePasswordPane.setVisible(false);
-            DeleteAccountPane.setVisible(false);
-
-            confirmDeletePasswordField.setText("");
-
         } else {
+            // Default case to handle other buttons if necessary
             UserInfo_pane.setVisible(false);
             Home_Page.setVisible(true);
             mainForm_AddCardPane.setVisible(false);
-
+            fetchAndDisplayWordCards(); // Reload cards when defaulting back to home
         }
     }
+
 
 
     // Method to open a file dialog and return the selected file
@@ -670,15 +643,17 @@ public class MainFormController implements Initializable {
     @FXML
     private void startQuiz(ActionEvent event) {
         try {
-            // Load the Quiz Scene
-            Parent quizRoot = FXMLLoader.load(getClass().getResource("quiz_screen.fxml")); // Ensure this path is correct
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/inglizgo_v3/quiz_screen.fxml"));
+            Parent quizRoot = loader.load();
+            QuizScreenController quizController = loader.getController();
+           // quizController.loadQuestions(); // Ensure questions are loaded
+
             Scene quizScene = new Scene(quizRoot);
             Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
             window.setScene(quizScene);
             window.show();
         } catch (IOException e) {
             e.printStackTrace();
-            // Handle exceptions, maybe show an error message to the user
         }
     }
 
@@ -788,6 +763,7 @@ public class MainFormController implements Initializable {
         // Fetch and display new cards
         fetchAndDisplayWordCards();
     }
+
 
     public void showQuiz() {
         try {

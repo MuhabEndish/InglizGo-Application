@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuizManager {
-    private int loggedInUserId;
+    private int loggedInUsername;
     private Connection connect;
 
     public QuizManager(int userId) {
-        this.loggedInUserId = userId;
+        this.loggedInUsername = userId;
         this.connect = connectDB();
     }
 
@@ -33,11 +33,11 @@ public class QuizManager {
         }
     }
 
-    public List<Question> fetchQuestionsForReview() {
+    public List<Question> fetchMasteredQuestions() {
         List<Question> questions = new ArrayList<>();
-        String query = "SELECT * FROM questions WHERE nextReviewDate <= CURDATE() AND masteryLevel < 6 AND userId = ?";
+        String query = "SELECT * FROM questions WHERE masteryLevel = 6 AND userId = ?";
         try (PreparedStatement pstmt = connect.prepareStatement(query)) {
-            pstmt.setInt(1, loggedInUserId);
+            pstmt.setInt(1, loggedInUsername);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     questions.add(extractQuestionFromResultSet(rs));
@@ -48,6 +48,7 @@ public class QuizManager {
         }
         return questions;
     }
+
 
     private Question extractQuestionFromResultSet(ResultSet rs) throws SQLException {
         return new Question(
