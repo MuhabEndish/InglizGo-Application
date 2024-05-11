@@ -22,6 +22,7 @@ public class QuizManager {
             return null;
         }
     }
+
     public void closeConnection() {
         if (this.connect != null) {
             try {
@@ -32,15 +33,15 @@ public class QuizManager {
         }
     }
 
-
     public List<Question> fetchQuestionsForReview() {
         List<Question> questions = new ArrayList<>();
         String query = "SELECT * FROM questions WHERE nextReviewDate <= CURDATE() AND masteryLevel < 6 AND userId = ?";
         try (PreparedStatement pstmt = connect.prepareStatement(query)) {
             pstmt.setInt(1, loggedInUserId);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                questions.add(extractQuestionFromResultSet(rs));
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    questions.add(extractQuestionFromResultSet(rs));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -59,13 +60,15 @@ public class QuizManager {
         );
     }
 
-
     public void submitAnswer(Question question, boolean isCorrect) {
         if (isCorrect) {
             question.setCurrentRepetition(question.getCurrentRepetition() + 1);
             if (question.getCurrentRepetition() >= 6) {
                 question.setMasteryLevel(question.getMasteryLevel() + 1);
                 question.setCurrentRepetition(0);
+                if (question.getMasteryLevel() > 6) {
+                    question.setMasteryLevel(6); // Cap the mastery level at 6
+                }
             }
         } else {
             question.setCurrentRepetition(0);

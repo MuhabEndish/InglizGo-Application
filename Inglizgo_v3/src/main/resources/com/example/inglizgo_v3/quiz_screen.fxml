@@ -7,24 +7,26 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.paint.Color?>
+<?import javafx.scene.input.MouseEvent?>
 
 <AnchorPane fx:id="quizPane" style="-fx-background-color: #1e242b;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.inglizgo_v3.QuizScreenController">
     <children>
-        <VBox alignment="CENTER" spacing="20" layoutX="160" layoutY="100" prefWidth="800" prefHeight="450" style="-fx-background-color: #37404a; -fx-background-radius: 10;">
+        <!-- Flashcard VBox -->
+        <VBox alignment="CENTER" spacing="20" layoutX="160" layoutY="100" prefWidth="800" prefHeight="450" style="-fx-background-color: #37404a; -fx-background-radius: 10; -fx-padding: 20;">
             <children>
-                <Label fx:id="questionLabel" text="Question will appear here" style="-fx-font-size: 24px; -fx-text-fill: white;" VBox.vgrow="ALWAYS"/>
-                <Button fx:id="showAnswerButton" text="Show Answer" onAction="#handleShowAnswer" styleClass="quiz-button">
-                    <graphic>
-                        <FontAwesomeIcon glyphName="EYE" size="1.5em" fill="WHITE"/>
-                    </graphic>
-                </Button>
+                <!-- Question Label -->
+                <Label fx:id="questionLabel" text="Tap to reveal answer" onMouseClicked="#handleShowAnswer" style="-fx-font-size: 24px; -fx-text-fill: white; -fx-wrap-text: true; -fx-cursor: hand;" VBox.vgrow="ALWAYS"/>
+
+                <!-- Answer Label (Initially hidden) -->
+                <Label fx:id="answerLabel" text="Answer will appear here" visible="false" style="-fx-font-size: 20px; -fx-text-fill: white; -fx-wrap-text: true;" VBox.vgrow="ALWAYS"/>
+
+                <!-- Control Buttons -->
                 <Button fx:id="nextQuestionButton" text="Next Question" onAction="#handleNextQuestion" styleClass="quiz-button">
                     <graphic>
                         <FontAwesomeIcon glyphName="ARROW_RIGHT" size="1.5em" fill="WHITE"/>
                     </graphic>
                 </Button>
             </children>
-
         </VBox>
     </children>
     <effect>

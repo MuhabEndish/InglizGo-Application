@@ -26,6 +26,20 @@ import java.net.URL;
 import java.sql.*;
 import java.util.*;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import javafx.event.ActionEvent;
+import javafx.scene.Node;
+import javafx.stage.Stage;
+
+
+
 public class MainFormController implements Initializable {
 
     @FXML
@@ -460,7 +474,7 @@ public class MainFormController implements Initializable {
 
         String currentPassword = changePassword_CurrentPssword.getText(); // Retrieve the current password from your UI components
         String newPassword = ChangePasswordPane_NewPassword.getText(); // Retrieve the new password from your UI components
-        String confirmPassword = ChangePasswordPane_ConfirmPassword.getText(); // Retrieve the confirm password from your UI components
+        String confirmPassword = ChangePasswordPane_ConfirmPassword.getText(); // Retrieve the confirmation password from your UI components
 
         // Check if the new password meets certain criteria (e.g., length requirements)
         if (newPassword.length() < 8) {
@@ -468,7 +482,7 @@ public class MainFormController implements Initializable {
             return;
         }
 
-        // Check if the new password matches the confirm password
+        // Check if the new password matches the confirmation password
         if (!newPassword.equals(confirmPassword)) {
             alert.errorMessage("Passwords do not match.");
             return;
@@ -587,6 +601,21 @@ public class MainFormController implements Initializable {
             e.printStackTrace();
         }
     }
+    @FXML
+    private Button startQuizButton;
+
+    @FXML
+    private void handleStartQuiz(ActionEvent event) {
+        try {
+            Parent quizRoot = FXMLLoader.load(getClass().getResource("QuizScreen.fxml"));
+            Scene quizScene = new Scene(quizRoot);
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(quizScene);
+            window.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
     // Method to convert JavaFX Image to byte array
@@ -598,7 +627,6 @@ public class MainFormController implements Initializable {
         ImageIO.write(bufferedImage, "gif", byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
     }
-
 
 
     @FXML
@@ -639,6 +667,21 @@ public class MainFormController implements Initializable {
             }
         }
     }
+    @FXML
+    private void startQuiz(ActionEvent event) {
+        try {
+            // Load the Quiz Scene
+            Parent quizRoot = FXMLLoader.load(getClass().getResource("quiz_screen.fxml")); // Ensure this path is correct
+            Scene quizScene = new Scene(quizRoot);
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(quizScene);
+            window.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle exceptions, maybe show an error message to the user
+        }
+    }
+
 
     @FXML
     private void signOut() {
@@ -746,30 +789,6 @@ public class MainFormController implements Initializable {
         fetchAndDisplayWordCards();
     }
 
-    @FXML
-    private void startQuiz(ActionEvent event) {
-        try {
-            // Load the quiz screen FXML file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("quiz_screen.fxml"));
-            Parent root = loader.load();
-
-            // Get the controller associated with the quiz screen
-            QuizScreenController quizController = loader.getController();
-
-            // Pass any necessary data to the quiz screen controller
-            // For example:
-            // quizController.setQuizData(quizData);
-
-            // Create a new scene with the quiz screen and set it on the stage
-            Scene scene = new Scene(root);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Handle any potential errors, such as FXML file not found
-        }
-    }
     public void showQuiz() {
         try {
             // Load the new scene

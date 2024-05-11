@@ -283,6 +283,21 @@
                               <FontAwesomeIcon fill="WHITE" glyphName="PLUS" />
                            </graphic>
                         </Button>
+                        <Button fx:id="HomePage_StartQuizBtn" layoutX="1018.0" layoutY="9.0" mnemonicParsing="false" onAction="#startQuiz" style="-fx-background-color: #40a2e3;" text="Start Quiz" textFill="WHITE">
+                           <font>
+                              <Font name="Arial" size="15.0" />
+                           </font>
+                           <effect>
+                              <DropShadow height="10.0" radius="4.5" width="10.0">
+                                 <color>
+                                    <Color red="0.02997075952589512" green="0.35265594720840454" blue="0.5394737124443054" />
+                                 </color>
+                              </DropShadow>
+                           </effect>
+                           <graphic>
+                              <FontAwesomeIcon fill="WHITE" glyphName="PLAY" />
+                           </graphic>
+                        </Button>
                      </children>
                      <effect>
                         <DropShadow blurType="GAUSSIAN">
