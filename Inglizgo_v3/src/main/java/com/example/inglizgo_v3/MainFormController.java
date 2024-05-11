@@ -95,6 +95,10 @@ public class MainFormController implements Initializable {
     private AnchorPane WordCard_Screen;
 
     @FXML
+    private AnchorPane mainForm_AddCardPane;
+
+
+    @FXML
     private TextField WordCard_SecondEx;
 
     @FXML
@@ -127,8 +131,6 @@ public class MainFormController implements Initializable {
     @FXML
     private AnchorPane lowerPane_WordCard;
 
-    @FXML
-    private AnchorPane mainForm_AddCardPane;
 
     @FXML
     private AnchorPane mainForm_mainPane;
@@ -187,7 +189,8 @@ public class MainFormController implements Initializable {
     @FXML
     private AnchorPane userInfo_userImageContainer1;
 
-
+    @FXML
+    private Button quizButton;
 
 
     private Connection connect;
@@ -597,52 +600,42 @@ public class MainFormController implements Initializable {
     }
 
 
+
     @FXML
     private void saveWordCardToDatabase(ActionEvent event) {
         AlertMessage alert = new AlertMessage();
 
         if (WordCard_addWord.getText().isEmpty() || WordCard_Translate.getText().isEmpty()
                 || WordCard_FirstEx.getText().isEmpty() || WordCard_SecondEx.getText().isEmpty()) {
-
             alert.errorMessage("Please fill all the fields");
         } else {
-            connect = connectDB();
-
-            try {
-                // Convert image to bytes
+            try (Connection connect = connectDB()) {
                 byte[] imageBytes = null;
-                Image image = WordCard_uploadedImageView.getImage();
-                if (image != null) {
-                    imageBytes = convertImageToBytes(image);
+                if (WordCard_uploadedImageView.getImage() != null) {
+                    imageBytes = convertImageToBytes(WordCard_uploadedImageView.getImage());
                 }
 
-                // Save data to database
-                PreparedStatement prepare = connect.prepareStatement("INSERT INTO wordcard (EN_word, TR_translate, FirstEx, SecondEX, UserName, Word_Image ) "
-                        + "VALUES (?, ?, ?, ?, ?, ? )");
-                prepare.setString(1, WordCard_addWord.getText());
-                prepare.setString(2, WordCard_Translate.getText());
-                prepare.setString(3, WordCard_FirstEx.getText());
-                prepare.setString(4, WordCard_SecondEx.getText());
-                prepare.setString(5, loggedInUsername);
-                prepare.setBytes(6, imageBytes);
-                prepare.executeUpdate();
+                String sql = "INSERT INTO wordcard (EN_word, TR_translate, FirstEx, SecondEx, UserName, Word_Image) VALUES (?, ?, ?, ?, ?, ?)";
+                try (PreparedStatement prepare = connect.prepareStatement(sql)) {
+                    prepare.setString(1, WordCard_addWord.getText());
+                    prepare.setString(2, WordCard_Translate.getText());
+                    prepare.setString(3, WordCard_FirstEx.getText());
+                    prepare.setString(4, WordCard_SecondEx.getText());
+                    prepare.setString(5, loggedInUsername);
+                    prepare.setBytes(6, imageBytes);
+                    prepare.executeUpdate();
+                }
 
                 alert.successMessage("Card successfully added.");
-
-                // After saving the word card, reload the displayed cards
-                reloadDisplayedWordCards();
-
                 WordCard_addWord.setText("");
                 WordCard_Translate.setText("");
                 WordCard_FirstEx.setText("");
                 WordCard_SecondEx.setText("");
                 WordCard_uploadedImageView.setImage(null);
 
-                // Load and display all WordCards after saving
-                //updateDisplayedWordCards();
             } catch (SQLException | IOException e) {
+                alert.errorMessage("Error occurred while saving the card: " + e.getMessage());
                 e.printStackTrace();
-                alert.errorMessage("Error occurred while saving the card.");
             }
         }
     }
@@ -751,6 +744,47 @@ public class MainFormController implements Initializable {
 
         // Fetch and display new cards
         fetchAndDisplayWordCards();
+    }
+
+    @FXML
+    private void startQuiz(ActionEvent event) {
+        try {
+            // Load the quiz screen FXML file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("quiz_screen.fxml"));
+            Parent root = loader.load();
+
+            // Get the controller associated with the quiz screen
+            QuizScreenController quizController = loader.getController();
+
+            // Pass any necessary data to the quiz screen controller
+            // For example:
+            // quizController.setQuizData(quizData);
+
+            // Create a new scene with the quiz screen and set it on the stage
+            Scene scene = new Scene(root);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle any potential errors, such as FXML file not found
+        }
+    }
+    public void showQuiz() {
+        try {
+            // Load the new scene
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("quiz_screen.fxml"));
+            Parent root = loader.load();
+
+            // Assuming quizButton is part of the current scene
+            Scene scene = new Scene(root);
+            Stage stage = (Stage) quizButton.getScene().getWindow(); // Getting the Stage from the quizButton
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Properly handle the loading error, perhaps show an error message to the user
+        }
     }
 
     @Override

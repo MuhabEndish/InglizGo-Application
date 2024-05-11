@@ -20,19 +20,29 @@ public class Question {
         this.masteryLevel = masteryLevel;
     }
 
-
-
-    // Getters and Setters
+    // Getters and setters
     public int getQuestionId() {
         return questionId;
+    }
+
+    public void setQuestionId(int questionId) {
+        this.questionId = questionId;
     }
 
     public String getQuestionText() {
         return questionText;
     }
 
+    public void setQuestionText(String questionText) {
+        this.questionText = questionText;
+    }
+
     public String getCorrectAnswer() {
         return correctAnswer;
+    }
+
+    public void setCorrectAnswer(String correctAnswer) {
+        this.correctAnswer = correctAnswer;
     }
 
     public int getCurrentRepetition() {
@@ -59,23 +69,7 @@ public class Question {
         this.masteryLevel = masteryLevel;
     }
 
-
-    // Update the question progress based on whether the answer was correct
-    public void updateProgress(boolean isCorrect) {
-        if (isCorrect) {
-            if (++currentRepetition >= 6) {
-                masteryLevel++;
-                currentRepetition = 0;
-                // Update next review date based on mastery level
-                updateReviewDate();
-            }
-        } else {
-            currentRepetition = 0; // Reset repetition since the answer was wrong
-        }
-    }
-
-
-
+    // Method to update the next review date based on the mastery level
     public void updateReviewDate() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(nextReviewDate); // Set the current next review date
@@ -108,6 +102,4 @@ public class Question {
 
         nextReviewDate = calendar.getTime(); // Update the nextReviewDate
     }
-
-
 }
