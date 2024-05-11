@@ -40,7 +40,7 @@
                               </ImageView>
                            </children>
                         </AnchorPane>
-                        <Button fx:id="userInfo_changeImage" layoutX="525.0" layoutY="261.0" mnemonicParsing="false" onAction="#chooseImage" prefHeight="32.0" prefWidth="30.0" style="-fx-background-radius: 20; -fx-background-color: #40a2e3;" >
+                        <Button fx:id="userInfo_changeImage" layoutX="525.0" layoutY="261.0" mnemonicParsing="false" onAction="#chooseImage" prefHeight="32.0" prefWidth="30.0" style="-fx-background-radius: 20; -fx-background-color: #40a2e3;" stylesheets="@style.css">
                            <effect>
                               <DropShadow blurType="GAUSSIAN" height="10.0" radius="4.5" width="10.0">
                                  <color>
@@ -86,7 +86,7 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Button fx:id="userInfo_DeleteUserImageBtn" layoutX="590.0" layoutY="261.0" mnemonicParsing="false" onAction="#emptyUserImageView" prefHeight="32.0" prefWidth="32.0" style="-fx-background-radius: 20; -fx-background-color: red;" >
+                        <Button fx:id="userInfo_DeleteUserImageBtn" layoutX="590.0" layoutY="261.0" mnemonicParsing="false" onAction="#emptyUserImageView" prefHeight="32.0" prefWidth="32.0" style="-fx-background-radius: 20; -fx-background-color: red;" stylesheets="@style.css">
                            <effect>
                               <DropShadow blurType="GAUSSIAN" height="10.0" radius="4.5" width="10.0">
                                  <color>
@@ -283,7 +283,7 @@
                               <FontAwesomeIcon fill="WHITE" glyphName="PLUS" />
                            </graphic>
                         </Button>
-                        <Button fx:id="HomePage_StartQuizBtn" layoutX="800.0" layoutY="9.0" mnemonicParsing="false" onAction="#startQuiz" style="-fx-background-color: #40a2e3;" text="Start Quiz" textFill="WHITE">
+                        <Button fx:id="HomePage_StartQuizBtn" layoutX="850.0" layoutY="9.0" mnemonicParsing="false" onAction="#startQuiz" style="-fx-background-color: #40a2e3;" text="Start Quiz" textFill="WHITE">
                            <font>
                               <Font name="Arial" size="15.0" />
                            </font>
