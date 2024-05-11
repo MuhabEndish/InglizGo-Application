@@ -283,7 +283,7 @@
                               <FontAwesomeIcon fill="WHITE" glyphName="PLUS" />
                            </graphic>
                         </Button>
-                        <Button fx:id="HomePage_StartQuizBtn" layoutX="1018.0" layoutY="9.0" mnemonicParsing="false" onAction="#startQuiz" style="-fx-background-color: #40a2e3;" text="Start Quiz" textFill="WHITE">
+                        <Button fx:id="HomePage_StartQuizBtn" layoutX="800.0" layoutY="9.0" mnemonicParsing="false" onAction="#startQuiz" style="-fx-background-color: #40a2e3;" text="Start Quiz" textFill="WHITE">
                            <font>
                               <Font name="Arial" size="15.0" />
                            </font>
