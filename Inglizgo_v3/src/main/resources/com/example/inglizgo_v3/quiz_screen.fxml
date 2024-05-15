@@ -4,18 +4,19 @@
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="quizPane" prefHeight="650.0" prefWidth="1120.0" style="-fx-background-color: #1e242b;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.inglizgo_v3.QuizScreenController">
+<AnchorPane fx:id="quizPane" prefHeight="492.0" prefWidth="1120.0" style="-fx-background-color: #1e242b;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.inglizgo_v3.QuizScreenController">
     <children>
-        <!-- Flashcard VBox -->
-        <VBox alignment="CENTER" layoutX="269.0" layoutY="217.0" prefHeight="245.0" prefWidth="581.0" spacing="20" style="-fx-background-color: #37404a; -fx-background-radius: 10; -fx-padding: 20;">
+        <!-- Quiz VBox -->
+        <VBox fx:id="questionContainer" alignment="CENTER" layoutX="269.0" layoutY="100.0" prefHeight="300.0" prefWidth="581.0" spacing="20" style="-fx-background-color: #37404a; -fx-background-radius: 10; -fx-padding: 20;">
             <children>
-                <!-- Question Label -->
-                <Label fx:id="questionLabel" contentDisplay="CENTER" onMouseClicked="#handleShowAnswer" prefHeight="70.0" prefWidth="360.0" style="-fx-font-size: 24px; -fx-text-fill: white; -fx-wrap-text: true; -fx-cursor: hand;" text=" Tap to reveal" VBox.vgrow="ALWAYS" />
+                <Label fx:id="questionLabel" style="-fx-font-size: 18pt; -fx-font-weight: bold;" text="Question goes here" textFill="WHITE" />
+                <Button fx:id="option1" mnemonicParsing="false" onAction="#handleOptionSelected" prefWidth="200.0" style="-fx-background-radius: 20; -fx-background-color: #40a2e3;" text="Option 1" textFill="WHITE" />
+                <Button fx:id="option2" mnemonicParsing="false" onAction="#handleOptionSelected" prefWidth="200.0" style="-fx-background-radius: 20; -fx-background-color: #40a2e3;" text="Option 2" textFill="WHITE" />
+                <Button fx:id="option3" mnemonicParsing="false" onAction="#handleOptionSelected" prefWidth="200.0" style="-fx-background-radius: 20; -fx-background-color: #40a2e3;" text="Option 3" textFill="WHITE" />
+                <Button fx:id="option4" mnemonicParsing="false" onAction="#handleOptionSelected" prefWidth="200.0" style="-fx-background-radius: 20; -fx-background-color: #40a2e3;" text="Option 4" textFill="WHITE" />
             </children>
         </VBox>
-
-          <!-- Back to Main Button -->
-          <Button layoutX="880.0" layoutY="596.0" onAction="#handleBackToMain" prefHeight="40.0" prefWidth="111.0" style="-fx-background-color: #40a2e3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10;" text="Back to Main" />
+        <Button fx:id="stopQuizBtn" layoutX="451.0" layoutY="443.0" mnemonicParsing="false" onAction="#stopQuiz" prefWidth="200.0" style="-fx-background-radius: 20; -fx-background-color: #d9534f;" text="Stop Quiz" textFill="WHITE" />
     </children>
     <effect>
         <DropShadow color="#00000088" offsetX="5" offsetY="5" radius="5" />

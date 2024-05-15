@@ -1,3 +1,4 @@
+
 package com.example.inglizgo_v3;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -6,7 +7,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -15,7 +15,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -26,17 +25,7 @@ import java.net.URL;
 import java.sql.*;
 import java.util.*;
 
-import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
-import javafx.event.ActionEvent;
-import javafx.scene.Node;
-
-
 
 
 public class MainFormController implements Initializable {
@@ -202,8 +191,9 @@ public class MainFormController implements Initializable {
     @FXML
     private AnchorPane userInfo_userImageContainer1;
 
+
     @FXML
-    private Button quizButton;
+    private Button startQuizButton;
 
 
     private Connection connect;
@@ -574,21 +564,8 @@ public class MainFormController implements Initializable {
             e.printStackTrace();
         }
     }
-    @FXML
-    private Button startQuizButton;
 
-    @FXML
-    private void handleStartQuiz(ActionEvent event) {
-        try {
-            Parent quizRoot = FXMLLoader.load(getClass().getResource("QuizScreen.fxml"));
-            Scene quizScene = new Scene(quizRoot);
-            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            window.setScene(quizScene);
-            window.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
 
 
     // Method to convert JavaFX Image to byte array
@@ -616,7 +593,7 @@ public class MainFormController implements Initializable {
                     imageBytes = convertImageToBytes(WordCard_uploadedImageView.getImage());
                 }
 
-                String sql = "INSERT INTO wordcard (EN_word, TR_translate, FirstEx, SecondEx, UserName, Word_Image) VALUES (?, ?, ?, ?, ?, ?)";
+                String sql = "INSERT INTO wordcards (EN_word, TR_translate, FirstEx, SecondEx, UserName, Word_Image) VALUES (?, ?, ?, ?, ?, ?)";
                 try (PreparedStatement prepare = connect.prepareStatement(sql)) {
                     prepare.setString(1, WordCard_addWord.getText());
                     prepare.setString(2, WordCard_Translate.getText());
@@ -640,22 +617,8 @@ public class MainFormController implements Initializable {
             }
         }
     }
-    @FXML
-    private void startQuiz(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/inglizgo_v3/quiz_screen.fxml"));
-            Parent quizRoot = loader.load();
-            QuizScreenController quizController = loader.getController();
-           // quizController.loadQuestions(); // Ensure questions are loaded
 
-            Scene quizScene = new Scene(quizRoot);
-            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            window.setScene(quizScene);
-            window.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 
 
     @FXML
@@ -688,7 +651,7 @@ public class MainFormController implements Initializable {
     private void fetchAndDisplayWordCards() {
         try {
             connect = connectDB();
-            PreparedStatement selectStatement = connect.prepareStatement("SELECT EN_word, TR_translate, FirstEx, SecondEx, Word_Image FROM wordcard WHERE UserName = ?");
+            PreparedStatement selectStatement = connect.prepareStatement("SELECT EN_word, TR_translate, FirstEx, SecondEx, Word_Image FROM wordcards WHERE UserName = ?");
             selectStatement.setString(1, loggedInUsername);
             ResultSet resultSet = selectStatement.executeQuery();
 
@@ -764,23 +727,36 @@ public class MainFormController implements Initializable {
         fetchAndDisplayWordCards();
     }
 
-
-    public void showQuiz() {
+    @FXML
+    private void startQuiz(ActionEvent event) {
         try {
-            // Load the new scene
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("quiz_screen.fxml"));
-            Parent root = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/inglizgo_v3/quiz_screen.fxml"));
+            if (loader.getLocation() == null) {
+                throw new IllegalStateException("FXML file not found");
+            }
+            Parent quizRoot = loader.load();
+            QuizScreenController quizController = loader.getController();
+            quizController.setLoggedInUsername(loggedInUsername); // Pass the username to the quiz controller
 
-            // Assuming quizButton is part of the current scene
-            Scene scene = new Scene(root);
-            Stage stage = (Stage) quizButton.getScene().getWindow(); // Getting the Stage from the quizButton
-            stage.setScene(scene);
-            stage.show();
+            Stage quizStage = new Stage();
+            quizStage.setTitle("Quiz");
+            quizStage.setScene(new Scene(quizRoot));
+            quizStage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            // Properly handle the loading error, perhaps show an error message to the user
+            showAlert("Error", "Unable to load the quiz screen.");
         }
     }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
