@@ -243,6 +243,7 @@ public class MainFormController implements Initializable {
             fetchAndDisplayWordCards(); // Ensure this method properly fetches and displays cards
         } else if (event.getSource() == upperPane_SettingsBtn) {
             UserInfo_pane.setVisible(true);
+            UserInfo_mainPane.setVisible(true);
             Home_Page.setVisible(false);
             mainForm_AddCardPane.setVisible(false);
             UserInfo_ChangePasswordPane.setVisible(false);
@@ -371,10 +372,39 @@ public class MainFormController implements Initializable {
 
     @FXML
     void emptyUserImageView(ActionEvent event) {
-
         if (event.getSource() == userInfo_DeleteUserImageBtn) {
             userInfo_ImageView.setImage(null);
             userInfo_ImageView1.setImage(null);
+            deleteImageFromDatabase(); // Call method to delete image from the database
+
+
+
+        }
+    }
+
+    private void deleteImageFromDatabase() {
+        try {
+            Connection connection = connectDB(); // Establish database connection
+            AlertMessage alert = new AlertMessage();
+
+            // Prepare statement to delete user image from the database
+            PreparedStatement deleteStatement = connection.prepareStatement("UPDATE user_info SET User_Photo = NULL WHERE UserName = ?");
+            deleteStatement.setString(1, loggedInUsername);
+
+            // Execute the delete statement
+            int rowsAffected = deleteStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("User image deleted successfully from the database.");
+                alert.successMessage("Your Image has been deleted");
+            } else {
+                System.out.println("No user image found for deletion.");
+            }
+
+            connection.close(); // Close the database connection
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error occurred while deleting user image from the database.");
         }
     }
 
@@ -681,10 +711,15 @@ public class MainFormController implements Initializable {
                 Label secondExLabel = new Label("Second Example: " + resultSet.getString("SecondEx"));
 
                 // Set styles for the labels
-                wordLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 17px; -fx-pref-width: 100px ; -fx-wrap-text: true;");
-                translateLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white ; -fx-font-size: 17px;-fx-pref-width: 180px ; -fx-wrap-text: true;");
-                firstExLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 17px; -fx-pref-width: 220px ; -fx-wrap-text: true; ");
-                secondExLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 17px; -fx-pref-width: 220px; -fx-wrap-text: true; ");
+                wordLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white;" +
+                        " -fx-font-size: 17px; -fx-pref-width: 100px ;" +
+                        " -fx-wrap-text: true;");
+                translateLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white ;" +
+                        " -fx-font-size: 17px;-fx-pref-width: 180px ; -fx-wrap-text: true;");
+                firstExLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white;" +
+                        " -fx-font-size: 17px; -fx-pref-width: 220px ; -fx-wrap-text: true; ");
+                secondExLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white;" +
+                        " -fx-font-size: 17px; -fx-pref-width: 220px; -fx-wrap-text: true; ");
 
                 // Create an ImageView for the word image
                 byte[] imageData = resultSet.getBytes("Word_Image");

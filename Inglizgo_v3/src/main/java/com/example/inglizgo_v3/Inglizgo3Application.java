@@ -13,7 +13,7 @@ public class Inglizgo3Application extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Inglizgo3Application.class.getResource("Login_SignUp_ForotPassword.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 650, 500);
+        Scene scene = new Scene(fxmlLoader.load(), 500, 650);
         stage.setTitle("Inglizgo");
         stage.setScene(scene);
 

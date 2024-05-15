@@ -64,9 +64,6 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
     private TextField Login_username;
 
     @FXML
-    private AnchorPane Main_Form;
-
-    @FXML
     private Button ResetPass_Back;
 
     @FXML
@@ -256,7 +253,6 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
                     Login_Form.setVisible(false);
                     ForgotPass_Form.setVisible(false);
                     ResetPass_Form.setVisible(true);
-                    Main_Form.setVisible(false);
 
                 }else {
                     alert.errorMessage("Incorrect Information.");
@@ -315,7 +311,6 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
                 Login_Form.setVisible(true);
                 ForgotPass_Form.setVisible(false);
                 ResetPass_Form.setVisible(false);
-                Main_Form.setVisible(false);
 
                 //CLEAR RESET PASSWORD FORM
                 ResetPass_NewPass.setText("");
@@ -416,7 +411,6 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
             Login_Form.setVisible(true);
             ForgotPass_Form.setVisible(false);
             ResetPass_Form.setVisible(false);
-            Main_Form.setVisible(false);
         }
         //SIGN UP FORM WILL BE VISIBLE IF YOU CLICKED ON CREATE ACCOUNT IN LOGIN FORM
         else if (event.getSource() == Login_CreatAcc) {
@@ -424,7 +418,6 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
             Login_Form.setVisible(false);
             ForgotPass_Form.setVisible(false);
             ResetPass_Form.setVisible(false);
-            Main_Form.setVisible(false);
 
             //WHEN SIGN UP FORM SHOWS UP, CLEAR THE LOGIN FORM
             //Login_username.setText("");
@@ -440,7 +433,6 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
             Login_Form.setVisible(false);
             ForgotPass_Form.setVisible(true);
             ResetPass_Form.setVisible(false);
-            Main_Form.setVisible(false);
 
             //WHEN FORGOT PASSWORD FORM SHOWS UP, CLEAR THE LOGIN FORM
             //Login_username.setText("");
@@ -458,7 +450,6 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
             Login_Form.setVisible(false);
             ForgotPass_Form.setVisible(true);
             ResetPass_Form.setVisible(false);
-            Main_Form.setVisible(false);
         }
     }
 
