@@ -177,7 +177,4 @@ public class QuizScreenController implements Initializable {
         stage.close();
     }
 
-
-
-
 }

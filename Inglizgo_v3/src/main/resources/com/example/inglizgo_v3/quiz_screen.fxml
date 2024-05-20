@@ -22,5 +22,4 @@
     <effect>
         <DropShadow color="#00000088" offsetX="5" offsetY="5" radius="5" />
     </effect>
-
 </AnchorPane>

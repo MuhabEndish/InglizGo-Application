@@ -184,9 +184,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
                     // Call loadUserImageFromDatabase method using the instance
                     Image userImage = mainFormController.loadUserImageFromDatabase(Login_username.getText());
 
-                    mainFormController.setUserImage(userImage);
-
-
+                     mainFormController.setUserImage(userImage);
                     Stage stage = new Stage();
                     Scene scene = new Scene(root);
 

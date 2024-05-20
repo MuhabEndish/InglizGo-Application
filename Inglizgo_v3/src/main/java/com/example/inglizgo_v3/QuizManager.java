@@ -186,7 +186,6 @@ public class QuizManager {
             e.printStackTrace();
         }
     }
-
     public ObservableList<PerformanceData> getPerformanceData(int userId) {
         ObservableList<PerformanceData> performanceData = FXCollections.observableArrayList();
         String query = "SELECT word_id, SUM(correct) AS correctAnswers, COUNT(*) AS totalAttempts, COUNT(*) - SUM(correct) AS incorrectAnswers, MAX(attempt_date) AS lastAttemptDate, next_review_date, repetition " +

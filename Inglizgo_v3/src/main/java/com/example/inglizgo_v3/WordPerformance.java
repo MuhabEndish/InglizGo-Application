@@ -7,7 +7,6 @@ public class WordPerformance {
     private int correctAnswers;
     private int incorrectAnswers;
 
-
     public WordPerformance(int wordId, int totalAttempts, int correctAnswers, int incorrectAnswers) {
         this.wordId = wordId;
         this.totalAttempts = totalAttempts;

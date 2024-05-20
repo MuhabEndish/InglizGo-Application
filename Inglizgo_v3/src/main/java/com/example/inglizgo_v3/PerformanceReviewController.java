@@ -33,7 +33,6 @@ public class PerformanceReviewController {
         setupTableColumns();
         loadData();
     }
-
     private void setupTableColumns() {
         colWordId.setCellValueFactory(new PropertyValueFactory<>("wordId"));
         colEnWord.setCellValueFactory(new PropertyValueFactory<>("enWord"));

@@ -575,6 +575,7 @@ public class MainFormController implements Initializable {
                             stage.close();
                             // Show the login form
                             showLoginForm();
+
                         } else {
                             // Account deletion failed
                             alert.errorMessage("Failed to delete account. Please try again.");

@@ -32,7 +32,6 @@ public class PerformanceData {
     public void setWordId(int wordId) {
         this.wordId = wordId;
     }
-
     public void setCorrect(int correct) {
         this.correct = correct;
     }

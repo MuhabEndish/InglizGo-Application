@@ -3,6 +3,7 @@ package com.example.inglizgo_v3;
 import java.util.Collections;
 import java.util.List;
 
+
 public class Question {
     private int wordId;
     private String enWord;
