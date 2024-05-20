@@ -64,6 +64,9 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
     private TextField Login_username;
 
     @FXML
+    private AnchorPane Main_Form;
+
+    @FXML
     private Button ResetPass_Back;
 
     @FXML
@@ -114,6 +117,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
     private ResultSet result;
     private Statement statement;
 
+
   //  METHOD ESTABLISHES A CONNECTION TO A MySQL DATABASE NAMED "inglizgo" HOSTED ON THE LOCALHOST SERVER
     public Connection connectDB(){
         try{
@@ -144,7 +148,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
 
         }else {
 
-            String selectData = "SELECT UserName , UserPassword FROM user_info WHERE "
+            String selectData = "SELECT user_id , UserName , UserPassword FROM user_info WHERE "
                     +"UserName = ? and UserPassword = ? ";
 
             connect = connectDB();
@@ -162,18 +166,20 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
                 prepare.setString(2, Login_password.getText());
 
                 result = prepare.executeQuery();
+                if (result.next()) {
+                    long userId = result.getLong("user_id");
+                    System.out.println("Logged in user_id: " + userId);
 
-                if(result.next()){
-                    //ONCE THE USER ENTERS CORRECT DATA WE WILL PROCEED TO THE MAIN FORM
-                    String username = Login_username.getText(); // Get the entered username
-
-                    //TO LINK THE MAIN FORM
+                    // Proceed to the main form and pass the user_id
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("mainForm.fxml"));
                     Parent root = loader.load();
                     MainFormController mainFormController = loader.getController();
+                    mainFormController.setUserId(userId);  // Assuming you have a setter for user_id in MainFormController
+
 
                     // Set the logged-in username in MainFormController
-                    mainFormController.setLoggedInUsername(username);
+                    mainFormController.setLoggedInUsername(Login_username.getText());  // Correcting the variable used here
+
                     // Load user image from the database
                     // Call loadUserImageFromDatabase method using the instance
                     Image userImage = mainFormController.loadUserImageFromDatabase(Login_username.getText());
@@ -253,6 +259,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
                     Login_Form.setVisible(false);
                     ForgotPass_Form.setVisible(false);
                     ResetPass_Form.setVisible(true);
+                    Main_Form.setVisible(false);
 
                 }else {
                     alert.errorMessage("Incorrect Information.");
@@ -311,6 +318,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
                 Login_Form.setVisible(true);
                 ForgotPass_Form.setVisible(false);
                 ResetPass_Form.setVisible(false);
+                Main_Form.setVisible(false);
 
                 //CLEAR RESET PASSWORD FORM
                 ResetPass_NewPass.setText("");
@@ -375,6 +383,12 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
                     prepare.setString(4, (String) Sign_SecQuestion.getSelectionModel().getSelectedItem());
                     prepare.setString(5, Sign_answer.getText());
 
+                    // Retrieve the generated user_id
+                    ResultSet rs = prepare.getGeneratedKeys();
+                    if (rs.next()) {
+                        long userId = rs.getLong(1);  // Assuming user_id is the first column
+                        System.out.println("Generated user_id: " + userId);
+                    }
                     // Execute the insert statement
                     prepare.executeUpdate();
 
@@ -411,6 +425,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
             Login_Form.setVisible(true);
             ForgotPass_Form.setVisible(false);
             ResetPass_Form.setVisible(false);
+            Main_Form.setVisible(false);
         }
         //SIGN UP FORM WILL BE VISIBLE IF YOU CLICKED ON CREATE ACCOUNT IN LOGIN FORM
         else if (event.getSource() == Login_CreatAcc) {
@@ -418,6 +433,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
             Login_Form.setVisible(false);
             ForgotPass_Form.setVisible(false);
             ResetPass_Form.setVisible(false);
+            Main_Form.setVisible(false);
 
             //WHEN SIGN UP FORM SHOWS UP, CLEAR THE LOGIN FORM
             //Login_username.setText("");
@@ -433,6 +449,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
             Login_Form.setVisible(false);
             ForgotPass_Form.setVisible(true);
             ResetPass_Form.setVisible(false);
+            Main_Form.setVisible(false);
 
             //WHEN FORGOT PASSWORD FORM SHOWS UP, CLEAR THE LOGIN FORM
             //Login_username.setText("");
@@ -450,6 +467,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
             Login_Form.setVisible(false);
             ForgotPass_Form.setVisible(true);
             ResetPass_Form.setVisible(false);
+            Main_Form.setVisible(false);
         }
     }
 

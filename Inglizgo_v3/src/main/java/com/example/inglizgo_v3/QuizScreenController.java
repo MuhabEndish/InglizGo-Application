@@ -2,20 +2,27 @@ package com.example.inglizgo_v3;
 
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.event.ActionEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
 
 public class QuizScreenController implements Initializable {
     @FXML
@@ -84,21 +91,25 @@ public class QuizScreenController implements Initializable {
         pause.play();
     }
 
+
+
     private void processAnswer(Button selectedButton, boolean isCorrect) {
+        int userId = quizManager.getUserIdFromUsername(loggedInUsername);
         if (isCorrect) {
             correctAnswersInARow++;
-            totalCorrectAnswers++;  // Increment the correct answers count
+            totalCorrectAnswers++;
             selectedButton.setStyle("-fx-background-color: green;");
             if (correctAnswersInARow == 6) {
                 quizManager.moveWordToKnownPool(currentQuestion.getWordId());
-                correctAnswersInARow = 0;
             }
+            quizManager.updateAttempt(userId, currentQuestion.getWordId(), true, correctAnswersInARow, quizManager.getNextReviewDate(correctAnswersInARow));
         } else {
             correctAnswersInARow = 0;
-            totalIncorrectAnswers++;  // Increment the incorrect answers count
+            totalIncorrectAnswers++;
             selectedButton.setStyle("-fx-background-color: red;");
             quizManager.resetWordProgress(currentQuestion.getWordId());
         }
+        quizManager.handleUserAnswer(userId, currentQuestion.getWordId(), isCorrect);
     }
 
     @FXML
@@ -108,6 +119,9 @@ public class QuizScreenController implements Initializable {
         int totalQuestions = totalCorrectAnswers + totalIncorrectAnswers;
         int score = (int) (((double) totalCorrectAnswers / totalQuestions) * 100);
         resultLabel.setText(String.format("Results: %d Correct, %d Incorrect, Score: %d%%", totalCorrectAnswers, totalIncorrectAnswers, score));
+
+        // Optionally show performance review
+        showPerformanceReview(quizManager.getUserIdFromUsername(loggedInUsername));
     }
 
     private void displayNextQuestion() {
@@ -121,7 +135,6 @@ public class QuizScreenController implements Initializable {
         }
     }
 
-
     private void finishQuiz() {
         disableButtons();
         showQuizResults();
@@ -132,6 +145,7 @@ public class QuizScreenController implements Initializable {
         option3.setDisable(true);
         option4.setDisable(true);
     }
+
     @FXML
     private Label correctCountLabel, incorrectCountLabel;
 
@@ -139,17 +153,31 @@ public class QuizScreenController implements Initializable {
         correctCountLabel.setText("Correct: " + totalCorrectAnswers);
         incorrectCountLabel.setText("Incorrect: " + totalIncorrectAnswers);
     }
+    public void showPerformanceReview(int userId) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("PerformanceReview.fxml"));
+            Parent root = loader.load();
+
+            PerformanceReviewController controller = loader.getController();
+            controller.init(loggedInUsername);
+
+            Stage stage = new Stage();
+            stage.setTitle("Performance Review");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @FXML
     private void stopQuiz() {
         Stage stage = (Stage) stopQuizBtn.getScene().getWindow();
         stage.close();
     }
-    private void showMotivationalMessage(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+
+
 
 
 }

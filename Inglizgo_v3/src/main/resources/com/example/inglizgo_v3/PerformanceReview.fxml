@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="performancePane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.inglizgo_v3.PerformanceReviewController">
+    <children>
+        <TableView fx:id="performanceTable" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="772.0">
+            <columns>
+                <TableColumn fx:id="colWordId" prefWidth="75.0" text="Word ID" />
+                <TableColumn fx:id="colEnWord" prefWidth="150.0" text="English Word" />
+                <TableColumn fx:id="colCorrect" prefWidth="100.0" text="Correct Answers" />
+                <TableColumn fx:id="colIncorrect" prefWidth="100.0" text="Incorrect Answers" />
+                <TableColumn fx:id="colTotal" prefWidth="100.0" text="Total Attempts" />
+                <TableColumn fx:id="colNextReview" prefWidth="150.0" text="Next Review Date" />
+            </columns>
+        </TableView>
+        <Button fx:id="refreshBtn" layoutX="14.0" layoutY="229.0" mnemonicParsing="false" onAction="#handleRefresh" text="Refresh" />
+        <Button fx:id="printReportBtn" layoutX="91.0" layoutY="229.0" mnemonicParsing="false" onAction="#handlePrintReport" text="Print Report" />
+    </children>
+</AnchorPane>

@@ -15,12 +15,12 @@
                 <Button fx:id="option3" mnemonicParsing="false" onAction="#handleOptionSelected" prefWidth="200.0" style="-fx-background-radius: 20; -fx-background-color: #40a2e3;" text="Option 3" textFill="WHITE" />
                 <Button fx:id="option4" mnemonicParsing="false" onAction="#handleOptionSelected" prefWidth="200.0" style="-fx-background-radius: 20; -fx-background-color: #40a2e3;" text="Option 4" textFill="WHITE" />
                 <Label fx:id="resultLabel" layoutX="269.0" layoutY="410.0" prefWidth="581.0" style="-fx-font-size: 14pt;" text="Results: 0 Correct, 0 Incorrect" textFill="WHITE" />
-
             </children>
         </VBox>
-        <Button fx:id="stopQuizBtn" layoutX="453.0" layoutY="585.0" mnemonicParsing="false" onAction="#stopQuiz" prefWidth="200.0" style="-fx-background-radius: 20; -fx-background-color: #d9534f;" text="End the Quiz" textFill="WHITE" />
+        <Button fx:id="stopQuizBtn" layoutX="453.0" layoutY="585.0" mnemonicParsing="false" onAction="#stopQuiz" prefHeight="25.0" prefWidth="118.0" style="-fx-background-radius: 20; -fx-background-color: #d9534f;" text="End the Quiz" textFill="WHITE" />
     </children>
     <effect>
         <DropShadow color="#00000088" offsetX="5" offsetY="5" radius="5" />
     </effect>
+
 </AnchorPane>

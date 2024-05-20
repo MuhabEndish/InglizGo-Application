@@ -2,6 +2,7 @@
 package com.example.inglizgo_v3;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +26,11 @@ import java.net.URL;
 import java.sql.*;
 import java.util.*;
 
-import javafx.scene.control.Button;
+import javafx.fxml.FXML;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+
 
 
 public class MainFormController implements Initializable {
@@ -191,7 +196,6 @@ public class MainFormController implements Initializable {
     @FXML
     private AnchorPane userInfo_userImageContainer1;
 
-
     @FXML
     private Button startQuizButton;
 
@@ -201,6 +205,7 @@ public class MainFormController implements Initializable {
     private ResultSet result;
     private Statement statement;
     public String loggedInUsername; // Assuming username is used as the identifier
+    private long userId;
 
     //METHOD ESTABLISHES A CONNECTION TO A MySQL DATABASE NAMED "inglizgo" HOSTED ON THE LOCALHOST SERVER
     public Connection connectDB(){
@@ -223,6 +228,15 @@ public class MainFormController implements Initializable {
         updateUsernameLabel();
 
 
+    }
+    // userId için bir setter metodu
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    // userId için bir getter metodu, gerektiğinde kullanmak üzere
+    public long getUserId() {
+        return userId;
     }
 
     // Method to update the label text with the loggedInUsername
@@ -791,6 +805,29 @@ public class MainFormController implements Initializable {
         alert.showAndWait();
     }
 
+    @FXML
+    private void handleViewPerformance() {
+        try {
+            // Load the performance review layout
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("PerformanceReview.fxml"));
+            Parent root = loader.load();
+
+            // Get the controller and initialize it if necessary
+            PerformanceReviewController controller = loader.getController();
+            controller.init(loggedInUsername); // Ensure you pass the correct logged-in username
+
+            // Create a new scene and stage (or use existing stage if that fits your design better)
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setTitle("Performance Review");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+    }
 
 
     @Override
@@ -814,7 +851,6 @@ public class MainFormController implements Initializable {
         });
 
 
-
-
     }
+
 }
