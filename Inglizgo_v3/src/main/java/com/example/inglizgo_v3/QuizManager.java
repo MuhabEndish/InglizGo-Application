@@ -188,8 +188,9 @@ public class QuizManager {
     }
     public ObservableList<PerformanceData> getPerformanceData(int userId) {
         ObservableList<PerformanceData> performanceData = FXCollections.observableArrayList();
-        String query = "SELECT word_id, SUM(correct) AS correctAnswers, COUNT(*) AS totalAttempts, COUNT(*) - SUM(correct) AS incorrectAnswers, MAX(attempt_date) AS lastAttemptDate, next_review_date, repetition " +
-                "FROM user_attempts WHERE user_id = ? GROUP BY word_id";
+        String query =  "SELECT a.word_id, b.EN_word, SUM(a.correct) AS correctAnswers, COUNT(*) AS totalAttempts, MAX(a.attempt_date) AS lastAttemptDate, a.next_review_date " +
+                "FROM user_attempts a JOIN wordcards b ON a.word_id = b.word_id " +
+                "WHERE a.user_id = ? GROUP BY a.word_id";
         try (Connection conn = connectDB();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, userId);
@@ -200,21 +201,21 @@ public class QuizManager {
             }
             while (rs.next()) {
                 int wordId = rs.getInt("word_id");
+                String enWord = rs.getString("EN_word");
                 int correctAnswers = rs.getInt("correctAnswers");
-                int incorrectAnswers = rs.getInt("incorrectAnswers");
                 int totalAttempts = rs.getInt("totalAttempts");
-                String lastAttemptDate = rs.getString("lastAttemptDate");
-                String nextReviewDate = rs.getString("next_review_date");
-                int repetition = rs.getInt("repetition");
+                int incorrectAnswers = totalAttempts - correctAnswers;
+                String nextReviewDate = rs.getTimestamp("next_review_date").toLocalDateTime().toString(); // Convert Timestamp to String
 
+                // Add new PerformanceData object to the list
                 performanceData.add(new PerformanceData(
                         userId,
                         wordId,
+                        enWord,
                         correctAnswers,
-                        lastAttemptDate,
-                        repetition,
-                        nextReviewDate,
-                        totalAttempts
+                        incorrectAnswers,
+                        totalAttempts,
+                        nextReviewDate
                 ));
             }
         } catch (SQLException e) {

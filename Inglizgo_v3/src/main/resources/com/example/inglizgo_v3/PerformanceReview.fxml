@@ -19,3 +19,4 @@
         <Button fx:id="printReportBtn" layoutX="91.0" layoutY="229.0" mnemonicParsing="false" onAction="#handlePrintReport" text="Print Report" />
     </children>
 </AnchorPane>
+

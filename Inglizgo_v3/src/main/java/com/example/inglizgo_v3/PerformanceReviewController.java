@@ -10,7 +10,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 public class PerformanceReviewController {
 
     @FXML
-    private TableView<PerformanceData> performanceTable;
+    private TableView<PerformanceData> performanceTable;  // Single TableView used for the UI
     @FXML
     private TableColumn<PerformanceData, Integer> colWordId;
     @FXML
@@ -33,11 +33,13 @@ public class PerformanceReviewController {
         setupTableColumns();
         loadData();
     }
+
     private void setupTableColumns() {
+        // Set up columns directly based on FXML bindings
         colWordId.setCellValueFactory(new PropertyValueFactory<>("wordId"));
         colEnWord.setCellValueFactory(new PropertyValueFactory<>("enWord"));
-        colCorrect.setCellValueFactory(new PropertyValueFactory<>("correctAnswers"));
-        colIncorrect.setCellValueFactory(new PropertyValueFactory<>("incorrectAnswers"));
+        colCorrect.setCellValueFactory(new PropertyValueFactory<>("correct"));
+        colIncorrect.setCellValueFactory(new PropertyValueFactory<>("incorrect"));
         colTotal.setCellValueFactory(new PropertyValueFactory<>("totalAttempts"));
         colNextReview.setCellValueFactory(new PropertyValueFactory<>("nextReviewDate"));
     }
