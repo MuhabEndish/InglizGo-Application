@@ -72,8 +72,8 @@ public class QuizScreenController implements Initializable {
         // Placeholder for potential future initialization code
     }
 
-    public void setLoggedInUsername(String username) {
-        this.loggedInUsername = username;
+    public void setLoggedInUsername(String UserName) {
+        this.loggedInUsername = UserName;
         this.quizManager = new QuizManager(loggedInUsername);
         loadQuestions();
     }
@@ -81,11 +81,10 @@ public class QuizScreenController implements Initializable {
     public void loadQuestions() {
         questions = quizManager.fetchQuestionsForUser();
 
-        // Check if questions list is empty
         if (questions.isEmpty()) {
             questionLabel.setStyle(" -fx-wrap-text:true; -fx-alignment:center; -fx-font-size:22px");
             questionLabel.setText("There are no questions for today. Try to add new words.");
-            disableButtons(); // Optionally disable answer buttons
+            disableButtons();
             quizScreen_ViewResultsBtn.setDisable(false);
         } else {
             displayNextQuestion();
@@ -129,29 +128,27 @@ public class QuizScreenController implements Initializable {
     }
 
     private void processAnswer(Button selectedButton, boolean isCorrect) {
-        int userId = quizManager.getUserIdFromUsername(loggedInUsername);
+        String UserName = loggedInUsername;
         int wordId = currentQuestion.getWordId();
         LocalDateTime lastAttemptDate = LocalDateTime.now();
 
         PerformanceData data = performanceDataMap.getOrDefault(wordId, new PerformanceData(
-                userId, wordId, currentQuestion.getEnWord(), 0, 0, lastAttemptDate, 0, LocalDateTime.now(), 0));
+                UserName, wordId, currentQuestion.getEnWord(), 0, 0, lastAttemptDate, 0, LocalDateTime.now(), 0));
 
         boolean shouldReset = !isCorrect || data.getNextReviewDate().isBefore(LocalDateTime.now());
 
         if (shouldReset) {
-            // Reset the values if the answer is wrong or if the next review date is past
             correctAnswersInARow = 0;
             totalIncorrectAnswers++;
-            int repetition = 1;  // Reset repetition on incorrect answer or past review date
+            int repetition = 1;
             LocalDateTime nextReviewDate = LocalDateTime.now().plusDays(1);
             data.setIncorrectAnswers(data.getIncorrectAnswers() + 1);
             data.setRepetition(repetition);
             data.setNextReviewDate(nextReviewDate);
-            quizManager.handleUserAnswer(userId, wordId, false);
+            quizManager.handleUserAnswer(UserName, wordId, false);
             selectedButton.setStyle("-fx-background-color: red;  -fx-background-radius: 20px");
-            quizManager.updateAttempt(userId, wordId, false, repetition, nextReviewDate);
+            quizManager.updateAttempt(UserName, wordId, false, repetition, nextReviewDate);
         } else {
-            // Correct answer and review date is not past
             correctAnswersInARow++;
             totalCorrectAnswers++;
             int repetition = data.getRepetition() + 1;
@@ -159,12 +156,12 @@ public class QuizScreenController implements Initializable {
             data.setCorrectAnswers(data.getCorrectAnswers() + 1);
             data.setRepetition(repetition);
             data.setNextReviewDate(nextReviewDate);
-            quizManager.handleUserAnswer(userId, wordId, true);
+            quizManager.handleUserAnswer(UserName, wordId, true);
             selectedButton.setStyle("-fx-background-color: green; -fx-background-radius: 20px");
             if (repetition > 6) {
                 quizManager.moveWordToKnownPool(wordId);
             } else {
-                quizManager.updateAttempt(userId, wordId, true, repetition, nextReviewDate);
+                quizManager.updateAttempt(UserName, wordId, true, repetition, nextReviewDate);
             }
         }
 
@@ -173,7 +170,6 @@ public class QuizScreenController implements Initializable {
 
         performanceDataMap.put(wordId, data);
     }
-
 
     private List<PerformanceData> collectPerformanceData() {
         return new ArrayList<>(performanceDataMap.values());
@@ -186,7 +182,6 @@ public class QuizScreenController implements Initializable {
             quizManager.insertUserAttempts(performanceDataList);
             showQuizResults();
         } catch (SQLException e) {
-            // or use a logging framework
             e.printStackTrace();
         }
     }
@@ -206,7 +201,7 @@ public class QuizScreenController implements Initializable {
         } else {
             handleQuizCompletion();
             disableButtons();
-            quizScreen_ViewResultsBtn.setDisable(false); // Enable the button when quiz ends
+            quizScreen_ViewResultsBtn.setDisable(false);
         }
     }
 
@@ -219,16 +214,16 @@ public class QuizScreenController implements Initializable {
 
     @FXML
     private void handleShowPerformanceReview(ActionEvent event) {
-        showPerformanceReview(quizManager.getUserIdFromUsername(loggedInUsername));
+        showPerformanceReview(loggedInUsername);
     }
 
-    public void showPerformanceReview(int userId) {
+    public void showPerformanceReview(String UserName) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("PerformanceReview.fxml"));
             Parent root = loader.load();
 
             PerformanceReviewController controller = loader.getController();
-            controller.init(loggedInUsername);
+            controller.init(UserName);
 
             Stage stage = new Stage();
             stage.setTitle("Performance Review");

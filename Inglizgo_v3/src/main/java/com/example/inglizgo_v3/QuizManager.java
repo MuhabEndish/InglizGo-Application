@@ -20,8 +20,8 @@ public class QuizManager {
 
     private String loggedInUsername;
 
-    public QuizManager(String username) {
-        this.loggedInUsername = username;
+    public QuizManager(String UserName) {
+        this.loggedInUsername = UserName;
     }
 
     private Connection connectDB() {
@@ -34,10 +34,8 @@ public class QuizManager {
         }
     }
 
-
     public void insertUserAttempts(List<PerformanceData> performanceDataList) throws SQLException {
-        // SQL query for inserting or updating user attempts
-        String sql = "INSERT INTO user_attempts (word_id, user_id, correct_answers, total_attempts, attempt_date, next_review_date, repetition) " +
+        String sql = "INSERT INTO user_attempts (word_id, UserName, correct_answers, total_attempts, attempt_date, next_review_date, repetition) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?) " +
                 "ON DUPLICATE KEY UPDATE " +
                 "correct_answers = VALUES(correct_answers), " +
@@ -51,11 +49,11 @@ public class QuizManager {
 
             for (PerformanceData data : performanceDataList) {
                 pstmt.setInt(1, data.getWordId());
-                pstmt.setInt(2, data.getUserId());
+                pstmt.setString(2, data.getUserName());
                 pstmt.setInt(3, data.getCorrectAnswers());
                 pstmt.setInt(4, data.getTotalAttempts());
-                pstmt.setTimestamp(5, Timestamp.valueOf(data.getLastAttemptDate())); // Convert LocalDateTime to Timestamp
-                pstmt.setTimestamp(6, Timestamp.valueOf(data.getNextReviewDate())); // Convert LocalDateTime to Timestamp
+                pstmt.setTimestamp(5, Timestamp.valueOf(data.getLastAttemptDate()));
+                pstmt.setTimestamp(6, Timestamp.valueOf(data.getNextReviewDate()));
                 pstmt.setInt(7, data.getRepetition());
 
                 pstmt.addBatch();
@@ -68,34 +66,17 @@ public class QuizManager {
         }
     }
 
-    public int getUserIdFromUsername(String username) {
-        int userId = -1;  // Default value if user is not found
-        String query = "SELECT user_id FROM user_info WHERE UserName = ?";
-        try (Connection conn = connectDB();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, username);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    userId = rs.getInt("user_id");
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return userId;
-    }
-
     public List<Question> fetchQuestionsForUser() {
         List<Question> questions = new ArrayList<>();
         LocalDate today = LocalDate.now();
         String query = "SELECT wc.word_id, wc.EN_word, wc.TR_translate, wc.FirstEx, wc.SecondEx " +
                 "FROM wordcards wc " +
-                "LEFT JOIN user_attempts ua ON wc.word_id = ua.word_id AND ua.user_id = ? " +
+                "LEFT JOIN user_attempts ua ON wc.word_id = ua.word_id AND ua.UserName = ? " +
                 "WHERE (ua.next_review_date IS NULL OR ua.next_review_date <= ?)";
 
         try (Connection conn = connectDB();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, getUserIdFromUsername(loggedInUsername));
+            pstmt.setString(1, loggedInUsername);
             pstmt.setDate(2, Date.valueOf(today));
 
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -118,8 +99,6 @@ public class QuizManager {
         }
         return questions;
     }
-
-
 
     private List<String> getChoicesForWord(String correctAnswer) {
         List<String> choices = new ArrayList<>();
@@ -154,14 +133,14 @@ public class QuizManager {
         }
     }
 
-    public void handleUserAnswer(int userId, int wordId, boolean isCorrect) {
-        int repetition = getCurrentRepetition(userId, wordId);
+    public void handleUserAnswer(String UserName, int wordId, boolean isCorrect) {
+        int repetition = getCurrentRepetition(UserName, wordId);
         LocalDateTime nextReview;
 
         if (isCorrect) {
             repetition++;
             nextReview = getNextReviewDate(repetition);
-            updateAttempt(userId, wordId, true, repetition, nextReview);
+            updateAttempt(UserName, wordId, true, repetition, nextReview);
 
             if (repetition > 6) {
                 moveWordToKnownPool(wordId);
@@ -169,25 +148,25 @@ public class QuizManager {
         } else {
             repetition = 1; // reset repetition on incorrect answer
             nextReview = LocalDateTime.now().plusDays(1);
-            updateAttempt(userId, wordId, false, repetition, nextReview);
+            updateAttempt(UserName, wordId, false, repetition, nextReview);
         }
     }
 
-    public void updateAttempt(int userId, int wordId, boolean isCorrect, int repetition, LocalDateTime nextReview) {
+    public void updateAttempt(String UserName, int wordId, boolean isCorrect, int repetition, LocalDateTime nextReview) {
         String sql;
         if (isCorrect) {
             sql = "UPDATE user_attempts SET correct_answers = 1, repetition = ?," +
-                    " next_review_date = ? WHERE user_id = ? AND word_id = ?";
+                    " next_review_date = ? WHERE UserName = ? AND word_id = ?";
         } else {
             sql = "UPDATE user_attempts SET correct_answers = 0, repetition = 1," +
-                    " next_review_date = ? WHERE user_id = ? AND word_id = ?";
+                    " next_review_date = ? WHERE UserName = ? AND word_id = ?";
         }
 
         try (Connection conn = connectDB();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, repetition);
             pstmt.setTimestamp(2, Timestamp.valueOf(nextReview));
-            pstmt.setInt(3, userId);
+            pstmt.setString(3, UserName);
             pstmt.setInt(4, wordId);
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -195,11 +174,11 @@ public class QuizManager {
         }
     }
 
-    private int getCurrentRepetition(int userId, int wordId) {
-        String sql = "SELECT repetition FROM user_attempts WHERE user_id = ? AND word_id = ?";
+    private int getCurrentRepetition(String UserName, int wordId) {
+        String sql = "SELECT repetition FROM user_attempts WHERE UserName = ? AND word_id = ?";
         try (Connection conn = connectDB();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, userId);
+            pstmt.setString(1, UserName);
             pstmt.setInt(2, wordId);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
@@ -226,30 +205,31 @@ public class QuizManager {
         String sql = "UPDATE user_attempts SET repetition = 1, next_review_date = ? WHERE word_id = ?";
         try (Connection conn = connectDB();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            LocalDateTime nextReviewDate = getNextReviewDate(1);  // Gets the next review date after one day.
-            pstmt.setTimestamp(1, Timestamp.valueOf(nextReviewDate));  // Convert LocalDateTime to Timestamp.
+            LocalDateTime nextReviewDate = getNextReviewDate(1);
+            pstmt.setTimestamp(1, Timestamp.valueOf(nextReviewDate));
             pstmt.setInt(2, wordId);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    public ObservableList<PerformanceData> getPerformanceData(int userId) {
+
+    public ObservableList<PerformanceData> getPerformanceData(String UserName) {
         ObservableList<PerformanceData> performanceData = FXCollections.observableArrayList();
         String query = "SELECT ua.word_id, wc.EN_word, SUM(ua.correct_answers) AS correctAnswers, " +
                 "COUNT(*) AS totalAttempts, COUNT(*) - SUM(ua.correct_answers) AS incorrectAnswers, " +
                 "MAX(ua.attempt_date) AS lastAttemptDate, ua.next_review_date, ua.repetition " +
                 "FROM user_attempts ua " +
                 "JOIN wordcards wc ON ua.word_id = wc.word_id " +
-                "WHERE ua.user_id = ? " +
+                "WHERE ua.UserName = ? " +
                 "GROUP BY ua.word_id, wc.EN_word";
         try (Connection conn = connectDB();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, userId);
+            pstmt.setString(1, UserName);
             ResultSet rs = pstmt.executeQuery();
             if (!rs.isBeforeFirst()) {
-                System.out.println("No data fetched for user ID: " + userId);
-                return performanceData; // return empty list early if no data
+                System.out.println("No data fetched for username: " + UserName);
+                return performanceData;
             }
             while (rs.next()) {
                 int wordId = rs.getInt("word_id");
@@ -262,11 +242,11 @@ public class QuizManager {
                 LocalDateTime nextReviewDate = rs.getTimestamp("next_review_date").toLocalDateTime();
 
                 performanceData.add(new PerformanceData(
-                        userId,
+                        UserName,
                         wordId,
                         EN_word,
                         correctAnswers,
-                        incorrectAnswers, // incorrectAnswers should be set appropriately
+                        incorrectAnswers,
                         lastAttemptDate,
                         repetition,
                         nextReviewDate,
@@ -280,19 +260,15 @@ public class QuizManager {
         return performanceData;
     }
 
-
-
-
     public void printPerformanceReport(ObservableList<PerformanceData> data) {
         try {
             PrinterJob job = PrinterJob.createPrinterJob();
             if (job != null && job.showPrintDialog(null)) {
                 job.getJobSettings().setJobName("Performance Report");
 
-                int itemsPerPage = 3; // Set fixed number of items per page to 3
+                int itemsPerPage = 3;
                 int pageIndex = 0;
 
-                // Loop through the data, creating and printing each page
                 while (pageIndex < data.size()) {
                     Node reportContent = createContent(data, pageIndex, itemsPerPage);
                     boolean success = job.printPage(reportContent);
@@ -313,7 +289,6 @@ public class QuizManager {
         VBox content = new VBox(15);
         content.setAlignment(Pos.CENTER);
 
-        // Add title to the content
         Label title = new Label(loggedInUsername +"'s Performance Report");
         title.setStyle("-fx-font-size: 23px;");
         content.getChildren().add(title);
@@ -323,7 +298,6 @@ public class QuizManager {
         for (int i = start; i < end; i++) {
             PerformanceData pd = data.get(i);
 
-            // Create labels for each item
             Label wordLabel = new Label("Word ID: " + pd.getWordId() + "\t\tEnglish Word: " + pd.getEN_word());
             Label correctLabel = new Label("Correct Answers: " + pd.getCorrectAnswers());
             Label incorrectLabel = new Label("Incorrect Answers: " + pd.getIncorrectAnswers());
@@ -332,7 +306,6 @@ public class QuizManager {
             Label repetitionLabel = new Label("Repetition: " + pd.getRepetition());
             Label nextReviewDateLabel = new Label("Next Review Date: " + pd.getNextReviewDate());
 
-            // Group labels into a VBox for each data item
             VBox dataBox = new VBox(5, wordLabel, correctLabel, incorrectLabel, totalAttemptsLabel,
                     lastAttemptDateLabel, repetitionLabel, nextReviewDateLabel);
             dataBox.setStyle("-fx-border-color: #000000; -fx-border-width: 0 0 1px 0; -fx-padding: 10px;");

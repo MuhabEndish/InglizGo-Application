@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class PerformanceData {
-    private int userId;
+    private String UserName;
     private int wordId;
     private String EN_word;
     private int correctAnswers;
@@ -16,20 +16,20 @@ public class PerformanceData {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public PerformanceData(int userId, int wordId, String EN_word, int correctAnswers, int incorrectAnswers, LocalDateTime lastAttemptDate, int repetition, LocalDateTime nextReviewDate, int totalAttempts) {
-        this.userId = userId;
+    public PerformanceData(String UserName, int wordId, String EN_word, int correctAnswers, int incorrectAnswers, LocalDateTime lastAttemptDate, int repetition, LocalDateTime nextReviewDate, int totalAttempts) {
+        this.UserName = UserName;
         this.wordId = wordId;
-        this.EN_word=EN_word;
+        this.EN_word = EN_word;
         this.correctAnswers = correctAnswers;
-        this.incorrectAnswers = incorrectAnswers; // Add this parameter
+        this.incorrectAnswers = incorrectAnswers;
         this.lastAttemptDate = lastAttemptDate;
         this.repetition = repetition;
         this.nextReviewDate = nextReviewDate;
         this.totalAttempts = totalAttempts;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getUserName() {
+        return UserName;
     }
 
     public int getWordId() {
@@ -45,7 +45,7 @@ public class PerformanceData {
     }
 
     public int getIncorrectAnswers() {
-        return incorrectAnswers; // Add this method
+        return incorrectAnswers;
     }
 
     public LocalDateTime getLastAttemptDate() {
@@ -64,18 +64,17 @@ public class PerformanceData {
         return totalAttempts;
     }
 
-    public void setEN_word(String EN_word) {
-        this.EN_word = EN_word;
+    public void setUserName(String UserName) {
+        this.UserName = UserName;
     }
 
     public void setCorrectAnswers(int correctAnswers) {
         this.correctAnswers = correctAnswers;
     }
 
-    public void setIncorrectAnswers(int incorrectAnswers) { // Add this method
+    public void setIncorrectAnswers(int incorrectAnswers) {
         this.incorrectAnswers = incorrectAnswers;
     }
-
 
     public void setLastAttemptDate(LocalDateTime lastAttemptDate) {
         this.lastAttemptDate = lastAttemptDate;

@@ -24,14 +24,15 @@ public class PerformanceReviewController {
     private TableColumn<PerformanceData, String> colNextReview;
 
     private QuizManager quizManager;
-    private String username;
+    private String UserName;
 
     public void init(String loggedInUsername) {
-        this.username = loggedInUsername;
-        this.quizManager = new QuizManager(username);
+        this.UserName = loggedInUsername;
+        this.quizManager = new QuizManager(UserName);
         setupTableColumns();
         loadData();
     }
+
     private void setupTableColumns() {
         colWordId.setCellValueFactory(new PropertyValueFactory<>("wordId"));
         colEnWord.setCellValueFactory(new PropertyValueFactory<>("EN_word"));
@@ -43,14 +44,9 @@ public class PerformanceReviewController {
 
     private void loadData() {
         try {
-            int userId = quizManager.getUserIdFromUsername(username);
-            if (userId != -1) {
-                ObservableList<PerformanceData> data = quizManager.getPerformanceData(userId);
-                System.out.println("Data fetched: " + data.size() + " records");
-                performanceTable.setItems(data);
-            } else {
-                System.out.println("User ID not found for username: " + username);
-            }
+            ObservableList<PerformanceData> data = quizManager.getPerformanceData(UserName);
+            System.out.println("Data fetched: " + data.size() + " records");
+            performanceTable.setItems(data);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,9 +59,6 @@ public class PerformanceReviewController {
 
     @FXML
     private void handlePrintReport() {
-
         quizManager.printPerformanceReport(performanceTable.getItems());
     }
-
-
 }
