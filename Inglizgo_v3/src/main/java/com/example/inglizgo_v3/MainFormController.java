@@ -505,16 +505,25 @@ public class MainFormController implements Initializable {
             selectStatement.setString(1, loggedInUsername);
             ResultSet resultSet = selectStatement.executeQuery();
             if (resultSet.next()) {
+
                 String storedPassword = resultSet.getString("UserPassword");
+
                 if (currentPassword.equals(storedPassword)) {
                     // Update the password in the database
                     PreparedStatement updateStatement = connect.prepareStatement("UPDATE user_info SET UserPassword = ? WHERE UserName = ?");
                     updateStatement.setString(1, newPassword);
                     updateStatement.setString(2, loggedInUsername);
+
                     int rowsAffected = updateStatement.executeUpdate();
+
                     if (rowsAffected > 0) {
+
                         // Password updated successfully
                         alert.successMessage("Password changed successfully.");
+                        UserInfo_mainPane.setVisible(true);
+                        UserInfo_ChangePasswordPane.setVisible(false);
+
+
                         //TO CLEAR THE FORM AFTER PASSWORD CHANGED SUCCESSFULLY
                         changePassword_CurrentPssword.setText("");
                         ChangePasswordPane_NewPassword.setText("");
