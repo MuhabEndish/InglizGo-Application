@@ -1,6 +1,5 @@
 package com.example.inglizgo_v3;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -10,7 +9,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 public class PerformanceReviewController {
 
     @FXML
-    private TableView<PerformanceData> performanceTable;  // Single TableView used for the UI
+    private TableView<PerformanceData> performanceTable;
     @FXML
     private TableColumn<PerformanceData, Integer> colWordId;
     @FXML
@@ -33,13 +32,11 @@ public class PerformanceReviewController {
         setupTableColumns();
         loadData();
     }
-
     private void setupTableColumns() {
-        // Set up columns directly based on FXML bindings
         colWordId.setCellValueFactory(new PropertyValueFactory<>("wordId"));
-        colEnWord.setCellValueFactory(new PropertyValueFactory<>("enWord"));
-        colCorrect.setCellValueFactory(new PropertyValueFactory<>("correct"));
-        colIncorrect.setCellValueFactory(new PropertyValueFactory<>("incorrect"));
+        colEnWord.setCellValueFactory(new PropertyValueFactory<>("EN_word"));
+        colCorrect.setCellValueFactory(new PropertyValueFactory<>("correctAnswers"));
+        colIncorrect.setCellValueFactory(new PropertyValueFactory<>("incorrectAnswers"));
         colTotal.setCellValueFactory(new PropertyValueFactory<>("totalAttempts"));
         colNextReview.setCellValueFactory(new PropertyValueFactory<>("nextReviewDate"));
     }
@@ -66,6 +63,9 @@ public class PerformanceReviewController {
 
     @FXML
     private void handlePrintReport() {
+
         quizManager.printPerformanceReport(performanceTable.getItems());
     }
+
+
 }

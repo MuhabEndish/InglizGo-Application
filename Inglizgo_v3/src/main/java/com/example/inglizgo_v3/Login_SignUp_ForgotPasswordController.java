@@ -63,8 +63,6 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
     @FXML
     private TextField Login_username;
 
-    @FXML
-    private AnchorPane Main_Form;
 
     @FXML
     private Button ResetPass_Back;
@@ -118,21 +116,16 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
     private Statement statement;
 
 
-  //  METHOD ESTABLISHES A CONNECTION TO A MySQL DATABASE NAMED "inglizgo" HOSTED ON THE LOCALHOST SERVER
+    //  METHOD ESTABLISHES A CONNECTION TO A MySQL DATABASE NAMED "inglizgo" HOSTED ON THE LOCALHOST SERVER
     public Connection connectDB(){
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             return DriverManager.getConnection(
-                    "jdbc:mysql://localhost:4306/inglizgo","root","");
+                    "jdbc:mysql://localhost:3306/inglizgo_app","root","");
         }
         catch(Exception e){e.printStackTrace();}
         return null;
     }
-
-
-
-
-
 
 
     public void Login(){
@@ -184,7 +177,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
                     // Call loadUserImageFromDatabase method using the instance
                     Image userImage = mainFormController.loadUserImageFromDatabase(Login_username.getText());
 
-                     mainFormController.setUserImage(userImage);
+                    mainFormController.setUserImage(userImage);
                     Stage stage = new Stage();
                     Scene scene = new Scene(root);
 
@@ -257,7 +250,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
                     Login_Form.setVisible(false);
                     ForgotPass_Form.setVisible(false);
                     ResetPass_Form.setVisible(true);
-                    Main_Form.setVisible(false);
+
 
                 }else {
                     alert.errorMessage("Incorrect Information.");
@@ -316,7 +309,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
                 Login_Form.setVisible(true);
                 ForgotPass_Form.setVisible(false);
                 ResetPass_Form.setVisible(false);
-                Main_Form.setVisible(false);
+
 
                 //CLEAR RESET PASSWORD FORM
                 ResetPass_NewPass.setText("");
@@ -351,7 +344,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
 
         }else if (Sign_Passw.getText().length()<8) {
             //CHECKS THE LENGTH OF THE PASSWORD IF IT'S LENGTH LESS THAN 8
-           alert.errorMessage("Invalid Password, at least 8 characters needed.");
+            alert.errorMessage("Invalid Password, at least 8 characters needed.");
 
         }else {
             //CHECKS IF THE USERNAME IS ALREADY TAKEN
@@ -381,13 +374,6 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
                     prepare.setString(4, (String) Sign_SecQuestion.getSelectionModel().getSelectedItem());
                     prepare.setString(5, Sign_answer.getText());
 
-                    // Retrieve the generated user_id
-                    ResultSet rs = prepare.getGeneratedKeys();
-                    if (rs.next()) {
-                        long userId = rs.getLong(1);  // Assuming user_id is the first column
-                        System.out.println("Generated user_id: " + userId);
-                    }
-                    // Execute the insert statement
                     prepare.executeUpdate();
 
                     alert.successMessage("Registered successfully!");
@@ -423,7 +409,6 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
             Login_Form.setVisible(true);
             ForgotPass_Form.setVisible(false);
             ResetPass_Form.setVisible(false);
-            Main_Form.setVisible(false);
         }
         //SIGN UP FORM WILL BE VISIBLE IF YOU CLICKED ON CREATE ACCOUNT IN LOGIN FORM
         else if (event.getSource() == Login_CreatAcc) {
@@ -431,7 +416,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
             Login_Form.setVisible(false);
             ForgotPass_Form.setVisible(false);
             ResetPass_Form.setVisible(false);
-            Main_Form.setVisible(false);
+
 
             //WHEN SIGN UP FORM SHOWS UP, CLEAR THE LOGIN FORM
             //Login_username.setText("");
@@ -447,7 +432,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
             Login_Form.setVisible(false);
             ForgotPass_Form.setVisible(true);
             ResetPass_Form.setVisible(false);
-            Main_Form.setVisible(false);
+
 
             //WHEN FORGOT PASSWORD FORM SHOWS UP, CLEAR THE LOGIN FORM
             //Login_username.setText("");
@@ -465,7 +450,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
             Login_Form.setVisible(false);
             ForgotPass_Form.setVisible(true);
             ResetPass_Form.setVisible(false);
-            Main_Form.setVisible(false);
+
         }
     }
 

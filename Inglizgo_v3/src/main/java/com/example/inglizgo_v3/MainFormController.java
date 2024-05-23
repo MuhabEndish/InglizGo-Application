@@ -2,7 +2,6 @@
 package com.example.inglizgo_v3;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,13 +23,8 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.sql.*;
-import java.util.*;
-
-import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 
 public class MainFormController implements Initializable {
@@ -50,8 +44,6 @@ public class MainFormController implements Initializable {
     @FXML
     private PasswordField ChangePasswordPane_ConfirmPassword;
 
-    @FXML
-    private Hyperlink ChangePasswordPane_ForgotPassword;
 
     @FXML
     private PasswordField ChangePasswordPane_NewPassword;
@@ -73,6 +65,9 @@ public class MainFormController implements Initializable {
 
     @FXML
     private Button HomePage_AddCardBtn;
+
+    @FXML
+    private Button HomePage_StartQuizBtn;
 
     @FXML
     private AnchorPane Home_Page;
@@ -100,10 +95,6 @@ public class MainFormController implements Initializable {
 
     @FXML
     private AnchorPane WordCard_Screen;
-
-    @FXML
-    private AnchorPane mainForm_AddCardPane;
-
 
     @FXML
     private TextField WordCard_SecondEx;
@@ -138,6 +129,8 @@ public class MainFormController implements Initializable {
     @FXML
     private AnchorPane lowerPane_WordCard;
 
+    @FXML
+    private AnchorPane mainForm_AddCardPane;
 
     @FXML
     private AnchorPane mainForm_mainPane;
@@ -147,9 +140,6 @@ public class MainFormController implements Initializable {
 
     @FXML
     private Button upperPane_HomeBtn;
-
-    @FXML
-    private Button upperPane_QuestionBtn;
 
     @FXML
     private Button upperPane_SettingsBtn;
@@ -212,7 +202,7 @@ public class MainFormController implements Initializable {
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             return DriverManager.getConnection(
-                    "jdbc:mysql://localhost:4306/inglizgo","root","");
+                    "jdbc:mysql://localhost:3306/inglizgo_app","root","");
         }
         catch(Exception e){e.printStackTrace();}
         return null;
@@ -254,7 +244,7 @@ public class MainFormController implements Initializable {
             Home_Page.setVisible(true);
             UserInfo_pane.setVisible(false);
             mainForm_AddCardPane.setVisible(false);
-            fetchAndDisplayWordCards(); // Ensure this method properly fetches and displays cards
+            reloadDisplayedWordCards(); // Ensure this method properly fetches and displays cards
         } else if (event.getSource() == upperPane_SettingsBtn) {
             UserInfo_pane.setVisible(true);
             UserInfo_mainPane.setVisible(true);
@@ -262,15 +252,27 @@ public class MainFormController implements Initializable {
             mainForm_AddCardPane.setVisible(false);
             UserInfo_ChangePasswordPane.setVisible(false);
             DeleteAccountPane.setVisible(false);
-        } else if (event.getSource() == upperPane_QuestionBtn) {
-            Home_Page.setVisible(false);
-            UserInfo_pane.setVisible(false);
-            mainForm_AddCardPane.setVisible(false);
-        } else if (event.getSource() == HomePage_AddCardBtn) {
+        }  else if (event.getSource() == HomePage_AddCardBtn) {
             Home_Page.setVisible(false);
             UserInfo_pane.setVisible(false);
             mainForm_AddCardPane.setVisible(true);
-        } else {
+        } else if (event.getSource() == userInfo_ChangePasswordBtn) {
+            UserInfo_mainPane.setVisible(false);
+            UserInfo_ChangePasswordPane.setVisible(true);
+            DeleteAccountPane.setVisible(false);
+            
+        }else if (event.getSource() == ChangePasswordPane_CancelChangeBtn
+                || event.getSource() == DeleteAccountCancelBtn) {
+            UserInfo_mainPane.setVisible(true);
+            UserInfo_ChangePasswordPane.setVisible(false);
+            DeleteAccountPane.setVisible(false);
+
+        }else if (event.getSource() == userInfo_DeleteAccountBtn) {
+            UserInfo_mainPane.setVisible(false);
+            UserInfo_ChangePasswordPane.setVisible(false);
+            DeleteAccountPane.setVisible(true);
+
+        }else {
             // Default case to handle other buttons if necessary
             UserInfo_pane.setVisible(false);
             Home_Page.setVisible(true);
@@ -656,6 +658,9 @@ public class MainFormController implements Initializable {
                 WordCard_SecondEx.setText("");
                 WordCard_uploadedImageView.setImage(null);
 
+                reloadDisplayedWordCards();
+
+
             } catch (SQLException | IOException e) {
                 alert.errorMessage("Error occurred while saving the card: " + e.getMessage());
                 e.printStackTrace();
@@ -695,63 +700,79 @@ public class MainFormController implements Initializable {
 
     private void fetchAndDisplayWordCards() {
         try {
+            AlertMessage alert = new AlertMessage();
+
             connect = connectDB();
-            PreparedStatement selectStatement = connect.prepareStatement("SELECT EN_word, TR_translate, FirstEx, SecondEx, Word_Image FROM wordcards WHERE UserName = ?");
+            PreparedStatement selectStatement = connect.prepareStatement("SELECT EN_word, TR_translate, FirstEx, SecondEx, Word_Image FROM wordcards WHERE UserName = ? ORDER BY word_id DESC");
             selectStatement.setString(1, loggedInUsername);
             ResultSet resultSet = selectStatement.executeQuery();
+
+            // Clear previous cards
+            WordCard_Screen.getChildren().clear();
 
             // Create a VBox to hold the card containers with spacing
             VBox cardContainerBox = new VBox();
             cardContainerBox.setSpacing(20); // Adjust spacing as needed
-            cardContainerBox.setAlignment(Pos.CENTER);// Align the card container box to the center
-            //cardContainerBox.setPrefWidth(1102);
-
-            cardContainerBox.setStyle("-fx-background-color: #00000000 ; -fx-pref-width: 1102; -fx-padding: 20px 10px;");
+            cardContainerBox.setAlignment(Pos.CENTER); // Align the card container box to the center
+            cardContainerBox.setStyle("-fx-background-color: #00000000; -fx-pref-width: 1321px; -fx-padding: 20px;");
 
             while (resultSet.next()) {
+                // Retrieve the word associated with the card being deleted
+                String word = resultSet.getString("EN_word");
+
                 // Create a container for the card
                 HBox cardContainer = new HBox();
-
-                cardContainer.setSpacing(30); // Adjust spacing as needed
+                cardContainer.setSpacing(50); // Adjust spacing as needed
                 cardContainer.setAlignment(Pos.CENTER);
-
                 cardContainer.getStyleClass().add("word-card"); // You can add a CSS class for styling
-                // Set inline styles for the cardContainer
-                cardContainer.setStyle("-fx-background-color: #3d4654; -fx-padding: 50px ; -fx-pref-width:1000px; -fx-background-radius: 6px; -fx-border-color: #585a5e ; -fx-border-radius:6px");
+                cardContainer.setStyle("-fx-background-color: #3d4654; -fx-padding: 20px; -fx-pref-width: 1300px; " +
+                        "-fx-background-radius: 6px; -fx-border-color: #585a5e; -fx-border-radius: 6px");
 
                 // Create labels for each piece of information
-                Label wordLabel = new Label("Word: " + resultSet.getString("EN_word"));
-                Label translateLabel = new Label("Translation: " + resultSet.getString("TR_translate"));
-                Label firstExLabel = new Label("First Example: " + resultSet.getString("FirstEx"));
-                Label secondExLabel = new Label("Second Example: " + resultSet.getString("SecondEx"));
+                Label wordLabel = new Label("Word:  " + resultSet.getString("EN_word"));
+                Label translateLabel = new Label("Translation:  " + resultSet.getString("TR_translate"));
+                Label firstExLabel = new Label("First Example:  " + resultSet.getString("FirstEx"));
+                Label secondExLabel = new Label("Second Example:  " + resultSet.getString("SecondEx"));
 
                 // Set styles for the labels
-                wordLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white;" +
-                        " -fx-font-size: 17px; -fx-pref-width: 100px ;" +
-                        " -fx-wrap-text: true;");
-                translateLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white ;" +
-                        " -fx-font-size: 17px;-fx-pref-width: 180px ; -fx-wrap-text: true;");
-                firstExLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white;" +
-                        " -fx-font-size: 17px; -fx-pref-width: 220px ; -fx-wrap-text: true; ");
-                secondExLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white;" +
-                        " -fx-font-size: 17px; -fx-pref-width: 220px; -fx-wrap-text: true; ");
+                wordLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 17px; -fx-pref-width: 130px; -fx-wrap-text: true;");
+                translateLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 17px; -fx-pref-width: 180px; -fx-wrap-text: true;");
+                firstExLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 17px; -fx-pref-width: 220px; -fx-wrap-text: true;");
+                secondExLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 17px; -fx-pref-width: 220px; -fx-wrap-text: true;");
 
                 // Create an ImageView for the word image
                 byte[] imageData = resultSet.getBytes("Word_Image");
                 if (imageData != null) {
                     Image image = new Image(new ByteArrayInputStream(imageData));
                     ImageView imageView = new ImageView(image);
-                    imageView.setFitWidth(150); // Set your preferred width
-                    imageView.setFitHeight(120); // Set your preferred height
+                    imageView.setFitWidth(200); // Set your preferred width
+                    imageView.setFitHeight(150); // Set your preferred height
                     cardContainer.getChildren().add(imageView);
                 }
 
+                Button deleteButton = new Button();
+                deleteButton.setStyle("-fx-background-color: red; -fx-background-radius: 20px; -fx-pref-width: 32px; -fx-pref-height: 32px;");
+
+                FontAwesomeIcon deleteIcon = new FontAwesomeIcon();
+                deleteIcon.setGlyphName("TRASH");
+                deleteIcon.setStyle("-fx-font-family: 'FontAwesome'; -fx-fill: white; -fx-font-size: 1.1em;");
+                deleteButton.setGraphic(deleteIcon);
+
+                deleteButton.setOnAction(event -> {
+                    // Handle card deletion
+                    cardContainerBox.getChildren().remove(cardContainer); // Remove from UI
+                    // Call a method to delete the word card from the database
+                    deleteWordCardFromDatabase(word);
+                    alert.successMessage("Your word card deleted successfully.");
+                });
+
                 // Add labels to the card container
                 cardContainer.getChildren().addAll(wordLabel, translateLabel, firstExLabel, secondExLabel);
+                // Add the delete button to the card container
+                cardContainer.getChildren().add(deleteButton);
 
                 // Add the card container to the VBox with spacing
                 cardContainerBox.getChildren().add(cardContainer);
-
             }
 
             // Add the VBox with card containers to the AnchorPane and center it
@@ -764,6 +785,20 @@ public class MainFormController implements Initializable {
             e.printStackTrace();
         }
     }
+
+    private void deleteWordCardFromDatabase(String word) {
+        try {
+            connect = connectDB();
+            PreparedStatement deleteStatement = connect.prepareStatement("DELETE FROM wordcards WHERE UserName = ? AND EN_word = ?");
+            deleteStatement.setString(1, loggedInUsername);
+            deleteStatement.setString(2, word);
+            deleteStatement.executeUpdate();
+            connect.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void clearDisplayedWordCards() {
         // Remove all existing card containers from the main form pane
         WordCard_Screen.getChildren().removeIf(node -> node.getStyleClass().contains("word-card"));
@@ -777,10 +812,11 @@ public class MainFormController implements Initializable {
         fetchAndDisplayWordCards();
     }
 
+
     @FXML
     private void startQuiz(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/inglizgo_v3/quiz_screen.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("quiz_screen.fxml"));
             if (loader.getLocation() == null) {
                 throw new IllegalStateException("FXML file not found");
             }
