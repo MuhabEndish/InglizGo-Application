@@ -4,18 +4,19 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class PerformanceData {
-    private String UserName;
-    private int wordId;
-    private String EN_word;
-    private int correctAnswers;
-    private int incorrectAnswers;
-    private LocalDateTime lastAttemptDate;
-    private int repetition;
-    private LocalDateTime nextReviewDate;
-    private int totalAttempts;
+    private String UserName; // Username associated with the performance data
+    private int wordId; // ID of the word
+    private String EN_word; // English word
+    private int correctAnswers; // Number of correct answers
+    private int incorrectAnswers; // Number of incorrect answers
+    private LocalDateTime lastAttemptDate; // Date and time of the last attempt
+    private int repetition; // Repetition count
+    private LocalDateTime nextReviewDate; // Date and time of the next review
+    private int totalAttempts; // Total number of attempts
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Formatter for date
 
+    // Constructor to initialize the performance data
     public PerformanceData(String UserName, int wordId, String EN_word, int correctAnswers, int incorrectAnswers, LocalDateTime lastAttemptDate, int repetition, LocalDateTime nextReviewDate, int totalAttempts) {
         this.UserName = UserName;
         this.wordId = wordId;
@@ -28,6 +29,7 @@ public class PerformanceData {
         this.totalAttempts = totalAttempts;
     }
 
+    // Getters
     public String getUserName() {
         return UserName;
     }
@@ -64,6 +66,7 @@ public class PerformanceData {
         return totalAttempts;
     }
 
+    // Setters
     public void setUserName(String UserName) {
         this.UserName = UserName;
     }

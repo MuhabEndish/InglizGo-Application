@@ -23,61 +23,63 @@ import java.util.*;
 
 public class QuizScreenController implements Initializable {
     @FXML
-    private TextField newQuestions_textField;
+    private TextField newQuestions_textField; // Text field to input new questions
 
     @FXML
-    private Button option1;
+    private Button option1; // Button for option 1
 
     @FXML
-    private Button option2;
+    private Button option2; // Button for option 2
 
     @FXML
-    private Button option3;
+    private Button option3; // Button for option 3
 
     @FXML
-    private Button option4;
+    private Button option4; // Button for option 4
 
     @FXML
-    private VBox questionContainer;
+    private VBox questionContainer; // Container for displaying questions
 
     @FXML
-    private Label questionLabel;
+    private Label questionLabel; // Label to display the current question
 
     @FXML
-    private AnchorPane quizPane_questions;
+    private AnchorPane quizPane_questions; // Pane to hold quiz questions
 
     @FXML
-    private Button quizScreen_ViewResultsBtn;
+    private Button quizScreen_ViewResultsBtn; // Button to view results
 
     @FXML
-    private Label resultLabel;
+    private Label resultLabel; // Label to display quiz results
 
     @FXML
-    private Button stopQuizBtn;
+    private Button stopQuizBtn; // Button to stop the quiz
 
-    private List<Question> questions;
-    private Question currentQuestion;
-    private int currentQuestionIndex = 0;
-    private int correctAnswersInARow = 0;
-    private int totalCorrectAnswers = 0;
-    private int totalIncorrectAnswers = 0;
+    private List<Question> questions; // List of questions
+    private Question currentQuestion; // Current question being displayed
+    private int currentQuestionIndex = 0; // Index of the current question
+    private int correctAnswersInARow = 0; // Number of correct answers in a row
+    private int totalCorrectAnswers = 0; // Total number of correct answers
+    private int totalIncorrectAnswers = 0; // Total number of incorrect answers
 
-    private String loggedInUsername;
-    private QuizManager quizManager;
+    private String loggedInUsername; // Username of the logged-in user
+    private QuizManager quizManager; // Instance of QuizManager
 
-    private Map<Integer, PerformanceData> performanceDataMap = new HashMap<>();
+    private Map<Integer, PerformanceData> performanceDataMap = new HashMap<>(); // Map to store performance data
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Placeholder for potential future initialization code
     }
 
+    // Method to set the logged-in username
     public void setLoggedInUsername(String UserName) {
         this.loggedInUsername = UserName;
         this.quizManager = new QuizManager(loggedInUsername);
         loadQuestions();
     }
 
+    // Method to load questions for the user
     public void loadQuestions() {
         questions = quizManager.fetchQuestionsForUser();
 
@@ -91,6 +93,7 @@ public class QuizScreenController implements Initializable {
         }
     }
 
+    // Method to update the question display
     private void updateQuestionDisplay() {
         if (currentQuestion != null) {
             questionLabel.setText("What is the Turkish meaning of " + currentQuestion.getEnWord() + " ?");
@@ -105,6 +108,7 @@ public class QuizScreenController implements Initializable {
         }
     }
 
+    // Method to reset the styles of the option buttons
     private void resetButtonStyles() {
         option1.setStyle("-fx-background-radius: 20; -fx-background-color: #40a2e3;");
         option2.setStyle("-fx-background-radius: 20; -fx-background-color: #40a2e3;");
@@ -112,6 +116,7 @@ public class QuizScreenController implements Initializable {
         option4.setStyle("-fx-background-radius: 20; -fx-background-color: #40a2e3;");
     }
 
+    // Method to handle when an option is selected
     @FXML
     private void handleOptionSelected(ActionEvent event) {
         Button selectedButton = (Button) event.getSource();
@@ -127,6 +132,7 @@ public class QuizScreenController implements Initializable {
         pause.play();
     }
 
+    // Method to process the selected answer
     private void processAnswer(Button selectedButton, boolean isCorrect) {
         String UserName = loggedInUsername;
         int wordId = currentQuestion.getWordId();
@@ -171,10 +177,12 @@ public class QuizScreenController implements Initializable {
         performanceDataMap.put(wordId, data);
     }
 
+    // Method to collect performance data
     private List<PerformanceData> collectPerformanceData() {
         return new ArrayList<>(performanceDataMap.values());
     }
 
+    // Method to handle the completion of the quiz
     @FXML
     private void handleQuizCompletion() {
         try {
@@ -186,6 +194,7 @@ public class QuizScreenController implements Initializable {
         }
     }
 
+    // Method to display quiz results
     @FXML
     private void showQuizResults() {
         int totalQuestions = totalCorrectAnswers + totalIncorrectAnswers;
@@ -193,6 +202,7 @@ public class QuizScreenController implements Initializable {
         resultLabel.setText(String.format("Results: %d Correct, %d Incorrect, Score: %d%%", totalCorrectAnswers, totalIncorrectAnswers, score));
     }
 
+    // Method to display the next question
     private void displayNextQuestion() {
         if (currentQuestionIndex < questions.size()) {
             currentQuestion = questions.get(currentQuestionIndex);
@@ -205,6 +215,7 @@ public class QuizScreenController implements Initializable {
         }
     }
 
+    // Method to disable the option buttons
     private void disableButtons() {
         option1.setDisable(true);
         option2.setDisable(true);
@@ -212,11 +223,13 @@ public class QuizScreenController implements Initializable {
         option4.setDisable(true);
     }
 
+    // Method to handle the performance review button click
     @FXML
     private void handleShowPerformanceReview(ActionEvent event) {
         showPerformanceReview(loggedInUsername);
     }
 
+    // Method to show the performance review
     public void showPerformanceReview(String UserName) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("PerformanceReview.fxml"));
@@ -234,6 +247,7 @@ public class QuizScreenController implements Initializable {
         }
     }
 
+    // Method to stop the quiz
     @FXML
     private void stopQuiz() {
         Stage stage = (Stage) stopQuizBtn.getScene().getWindow();

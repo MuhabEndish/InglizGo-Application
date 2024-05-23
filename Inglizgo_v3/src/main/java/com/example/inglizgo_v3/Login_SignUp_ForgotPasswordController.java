@@ -1,6 +1,5 @@
 package com.example.inglizgo_v3;
 
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,9 +17,9 @@ import java.net.URL;
 import java.sql.*;
 import java.util.*;
 
+public class Login_SignUp_ForgotPasswordController implements Initializable {
 
-public class Login_SignUp_ForgotPasswordController implements Initializable  {
-
+    // FXML elements for various forms and controls
     @FXML
     private TextField ForgPass_Email;
 
@@ -62,7 +61,6 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
 
     @FXML
     private TextField Login_username;
-
 
     @FXML
     private Button ResetPass_Back;
@@ -106,17 +104,13 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
     @FXML
     private TextField Sign_answer;
 
-
-
-
-
+    // Database connection variables
     private Connection connect;
     private PreparedStatement prepare;
     private ResultSet result;
     private Statement statement;
 
-
-    //  METHOD ESTABLISHES A CONNECTION TO A MySQL DATABASE NAMED "inglizgo" HOSTED ON THE LOCALHOST SERVER
+    // Method to establish a connection to the MySQL database named "inglizgo_app"
     public Connection connectDB(){
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -127,29 +121,25 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
         return null;
     }
 
-
+    // Method to handle user login
     public void Login(){
-
         AlertMessage alert = new AlertMessage();
         MainFormController mainformcontroller = new MainFormController();
 
-        //CHECKS IF ANY FIELD IS EMPTY
+        // Checks if any login fields are empty
         if(Login_username.getText().isEmpty()
                 || Login_password.getText().isEmpty()){
-
             alert.errorMessage("Incorrect Username or Password.");
-
-        }else {
-
+        } else {
             String selectData = "SELECT user_id , UserName , UserPassword FROM user_info WHERE "
-                    +"UserName = ? and UserPassword = ? ";
+                    + "UserName = ? and UserPassword = ? ";
 
             connect = connectDB();
 
-            //IF YOU CHANGED THE SHOWN PASSWORD FIELD THE PASSWORD FIELD CHANGES TOO
+            // Syncs the visible password field with the actual password field
             if (Login_selectShowPass.isSelected()){
                 Login_password.setText(Login_shownPassword.getText());
-            }else {
+            } else {
                 Login_shownPassword.setText(Login_password.getText());
             }
 
@@ -169,32 +159,24 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
                     MainFormController mainFormController = loader.getController();
                     mainFormController.setUserId(userId);  // Assuming you have a setter for user_id in MainFormController
 
-
                     // Set the logged-in username in MainFormController
-                    mainFormController.setLoggedInUsername(Login_username.getText());  // Correcting the variable used here
+                    mainFormController.setLoggedInUsername(Login_username.getText());
 
                     // Load user image from the database
-                    // Call loadUserImageFromDatabase method using the instance
                     Image userImage = mainFormController.loadUserImageFromDatabase(Login_username.getText());
-
                     mainFormController.setUserImage(userImage);
+
                     Stage stage = new Stage();
                     Scene scene = new Scene(root);
-
                     stage.setScene(scene);
-                    //TO SHOW THE MAIN FORM
-                    stage.show();
-                    //TO HIDE THE LOGIN WINDOW
-                    Login_btn.getScene().getWindow().hide();
+                    stage.show();  // Show the main form
+                    Login_btn.getScene().getWindow().hide();  // Hide the login window
 
                     alert.successMessage("Successfully Login!");
-                    //mainformcontroller.updateDisplayedWordCards();
 
-                }else{
-                    //ELSE, THEN ERROR MESSAGE SHOWS UP
+                } else {
                     alert.errorMessage("Incorrect Username or Password.");
                 }
-
             }
             catch (Exception e){
                 e.printStackTrace();
@@ -202,39 +184,35 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
         }
     }
 
+    // Method to toggle the visibility of the password
     public void showPassword(){
-
         if(Login_selectShowPass.isSelected()){
             Login_shownPassword.setText(Login_password.getText());
             Login_shownPassword.setVisible(true);
             Login_password.setVisible(false);
-
-        }else {
+        } else {
             Login_password.setText(Login_shownPassword.getText());
             Login_shownPassword.setVisible(false);
             Login_password.setVisible(true);
         }
     }
 
+    // Method to handle forgotten password functionality
     public void forgotPassword(){
-
         AlertMessage alert = new AlertMessage();
 
+        // Checks if any forgot password fields are empty
         if(ForgPass_Email.getText().isEmpty()
                 || Forg_SecQuestion.getSelectionModel().getSelectedItem() == null
                 || Forg_Answer.getText().isEmpty()){
-
             alert.errorMessage("Please fill all fields!");
-
-        }else {
-
+        } else {
             String checkData = "SELECT UserEmail , SecurityQuestion , SecQueAnswer FROM user_info "
                     + "WHERE UserEmail = ? AND SecurityQuestion = ? AND SecQueAnswer = ? ";
 
             connect = connectDB();
 
             try {
-
                 prepare = connect.prepareStatement(checkData);
                 prepare.setString(1 , ForgPass_Email.getText());
                 prepare.setString(2 , (String) Forg_SecQuestion.getSelectionModel().getSelectedItem());
@@ -242,112 +220,90 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
 
                 result = prepare.executeQuery();
 
-                //IF USER ENTERED EXISTED DATA
+                // If user entered valid data
                 if (result.next()){
-
-                    //PROCEED TO CHANGE PASSWORD
+                    // Proceed to change password form
                     SignUp_Form.setVisible(false);
                     Login_Form.setVisible(false);
                     ForgotPass_Form.setVisible(false);
                     ResetPass_Form.setVisible(true);
-
-
-                }else {
+                } else {
                     alert.errorMessage("Incorrect Information.");
                 }
-            }catch (Exception e){
+            } catch (Exception e){
                 e.printStackTrace();
             }
         }
     }
 
+    // Method to populate security question list for forgot password form
     public void forgotPasswordQuestionList(){
-
         List<String> listQ = new ArrayList<>();
-
         Collections.addAll(listQ, questionList);
         ObservableList listData = FXCollections.observableArrayList(listQ);
         Forg_SecQuestion.setItems(listData);
-
     }
 
+    // Method to reset password
     public void resetPassword(){
         AlertMessage alert = new AlertMessage();
 
-        //CHECKS IF ANY FIELD IS EMPTY
+        // Checks if any reset password fields are empty
         if (ResetPass_NewPass.getText().isEmpty() || ResetPass_ConNewPass.getText().isEmpty()){
-
             alert.errorMessage("Please fill all the fields!");
-
         } else if (!ResetPass_NewPass.getText().equals(ResetPass_ConNewPass.getText())){
-            //CHECKS IF THE NEW PASSWORD AND CONFIRMATION ARE NOT MATCH
-
             alert.errorMessage("Password does not match");
-
-        }else if (ResetPass_NewPass.getText().length()<8) {
+        } else if (ResetPass_NewPass.getText().length() < 8) {
             alert.errorMessage("The new Password should be longer than 8 characters.");
-
-        }else {
-
+        } else {
             String updateData = "UPDATE user_info SET UserPassword = ? "
-                    + "WHERE UserEmail = '" + ForgPass_Email.getText() + "'" ;
+                    + "WHERE UserEmail = '" + ForgPass_Email.getText() + "'";
 
             connect = connectDB();
 
             try {
-
                 prepare = connect.prepareStatement(updateData);
                 prepare.setString(1 , ResetPass_NewPass.getText());
-
                 prepare.executeUpdate();
-
 
                 alert.successMessage("Password changed successfully.");
 
-                //LOGIN FORM WILL APPEAR AFTER PASSWORD SUCCESSFULLY CHANGED
+                // Show login form after password change
                 SignUp_Form.setVisible(false);
                 Login_Form.setVisible(true);
                 ForgotPass_Form.setVisible(false);
                 ResetPass_Form.setVisible(false);
 
-
-                //CLEAR RESET PASSWORD FORM
+                // Clear reset password form
                 ResetPass_NewPass.setText("");
                 ResetPass_ConNewPass.setText("");
 
-                //CLEAR FORGOT PASSWOR FORM
+                // Clear forgot password form
                 ForgPass_Email.setText("");
                 Forg_SecQuestion.getSelectionModel().clearSelection();
                 Forg_Answer.setText("");
-
-            }catch (Exception e){
+            } catch (Exception e){
                 e.printStackTrace();
             }
         }
     }
 
+    // Method to register a new user
     public void Register(){
-
         AlertMessage alert = new AlertMessage();
 
-        //Checks if there are any empty fields
+        // Checks if any sign-up fields are empty
         if(Sign_Email.getText().isEmpty() || Sign_Username.getText().isEmpty()
                 || Sign_Passw.getText().isEmpty() || Sign_ConfPass.getText().isEmpty()
                 || (Sign_SecQuestion.getSelectionModel().getSelectedItem() == null)
                 || Sign_answer.getText().isEmpty()){
-
             alert.errorMessage("All the fields are required.");
-
-        }else if (!Objects.equals(Sign_Passw.getText(), Sign_ConfPass.getText())) {
-            //CHECKS IF THE PASSWORD MATCHES WITH CONFIRM PASSWORD
+        } else if (!Objects.equals(Sign_Passw.getText(), Sign_ConfPass.getText())) {
             alert.errorMessage("Password doesn't match.");
-
-        }else if (Sign_Passw.getText().length()<8) {
-            //CHECKS THE LENGTH OF THE PASSWORD IF IT'S LENGTH LESS THAN 8
+        } else if (Sign_Passw.getText().length() < 8) {
             alert.errorMessage("Invalid Password, at least 8 characters needed.");
-
-        }else {
-            //CHECKS IF THE USERNAME IS ALREADY TAKEN
+        } else {
+            // Checks if the username is already taken
             String checkUsername = "SELECT * FROM user_info WHERE UserName = ?";
             connect = connectDB();
 
@@ -360,8 +316,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
 
                 if (result.next()) {
                     alert.errorMessage(Sign_Username.getText() + " is already taken.");
-
-                }else {
+                } else {
                     String insertData = "INSERT INTO user_info " +
                             "(UserEmail, UserName, UserPassword, SecurityQuestion, SecQueAnswer)"
                             + " VALUES (?, ?, ?, ?, ?)";
@@ -383,13 +338,13 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
                     SignUp_Form.setVisible(false);
                     Login_Form.setVisible(true);
                 }
-            }catch (SQLException e) {
+            } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    //TO CLEAR FIELDS AFTER REGISTRATION ENDS
+    // Method to clear fields after registration
     public void clearRegisterFields(){
         Sign_Email.setText("");
         Sign_Username.setText("");
@@ -399,61 +354,44 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
         Sign_answer.setText("");
     }
 
+    // Method to switch between forms based on button clicks
     public void switchBetweenForms(ActionEvent event){
-
-        //LOGIN FORM WILL BE VISIBLE IF YOU CLICKED ON LOGIN BUTTON IN SIGN UP FORM
-        if (event.getSource() == Sign_LoginBtn
-                || event.getSource() == Forg_BackBtn){
-
+        if (event.getSource() == Sign_LoginBtn || event.getSource() == Forg_BackBtn){
             SignUp_Form.setVisible(false);
             Login_Form.setVisible(true);
             ForgotPass_Form.setVisible(false);
             ResetPass_Form.setVisible(false);
-        }
-        //SIGN UP FORM WILL BE VISIBLE IF YOU CLICKED ON CREATE ACCOUNT IN LOGIN FORM
-        else if (event.getSource() == Login_CreatAcc) {
+        } else if (event.getSource() == Login_CreatAcc) {
             SignUp_Form.setVisible(true);
             Login_Form.setVisible(false);
             ForgotPass_Form.setVisible(false);
             ResetPass_Form.setVisible(false);
 
-
-            //WHEN SIGN UP FORM SHOWS UP, CLEAR THE LOGIN FORM
-            //Login_username.setText("");
             Login_password.setVisible(true);
             Login_password.setText("");
             Login_shownPassword.setVisible(false);
             Login_selectShowPass.setSelected(false);
-
-        }
-        //FORGOT PASSWORD FORM WILL BE VISIBLE WHEN YOU CLICK ON FORGOT PASSWORD
-        else if (event.getSource() == Login_ForgPass) {
+        } else if (event.getSource() == Login_ForgPass) {
             SignUp_Form.setVisible(false);
             Login_Form.setVisible(false);
             ForgotPass_Form.setVisible(true);
             ResetPass_Form.setVisible(false);
 
-
-            //WHEN FORGOT PASSWORD FORM SHOWS UP, CLEAR THE LOGIN FORM
-            //Login_username.setText("");
             Login_password.setVisible(true);
             Login_password.setText("");
             Login_shownPassword.setVisible(false);
             Login_selectShowPass.setSelected(false);
 
-            //TO SHOW DATA TO OUR COMBO BOX
             forgotPasswordQuestionList();
-
-        }
-        else if (event.getSource() == ResetPass_Back) {
+        } else if (event.getSource() == ResetPass_Back) {
             SignUp_Form.setVisible(false);
             Login_Form.setVisible(false);
             ForgotPass_Form.setVisible(true);
             ResetPass_Form.setVisible(false);
-
         }
     }
 
+    // List of security questions
     private final String[] questionList = { "What is your best friend's name?"
             , "What is your favorite color?"
             , "What is the name of your pet?"
@@ -461,9 +399,10 @@ public class Login_SignUp_ForgotPasswordController implements Initializable  {
             , "What is mother's maiden name?"
             , "What was the name of your elementary school?"
             , "What is your best teacher's name?" };
+
+    // Method to populate security question list for sign-up form
     public void SecurityQuestion(){
         List<String> listQ = new ArrayList<>();
-
         Collections.addAll(listQ, questionList);
         ObservableList listData = FXCollections.observableArrayList(listQ);
         Sign_SecQuestion.setItems(listData);

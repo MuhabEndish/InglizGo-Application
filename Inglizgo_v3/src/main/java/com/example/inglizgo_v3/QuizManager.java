@@ -20,10 +20,12 @@ public class QuizManager {
 
     private String loggedInUsername;
 
+    // Constructor to initialize QuizManager with the logged-in username
     public QuizManager(String UserName) {
         this.loggedInUsername = UserName;
     }
 
+    // Method to establish a connection to the MySQL database
     private Connection connectDB() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -34,6 +36,7 @@ public class QuizManager {
         }
     }
 
+    // Method to insert or update user attempts in the database
     public void insertUserAttempts(List<PerformanceData> performanceDataList) throws SQLException {
         String sql = "INSERT INTO user_attempts (word_id, UserName, correct_answers, total_attempts, attempt_date, next_review_date, repetition) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?) " +
@@ -66,6 +69,7 @@ public class QuizManager {
         }
     }
 
+    // Method to fetch questions for the user
     public List<Question> fetchQuestionsForUser() {
         List<Question> questions = new ArrayList<>();
         LocalDate today = LocalDate.now();
@@ -100,6 +104,7 @@ public class QuizManager {
         return questions;
     }
 
+    // Method to get choices for a word excluding the correct answer
     private List<String> getChoicesForWord(String correctAnswer) {
         List<String> choices = new ArrayList<>();
         choices.add(correctAnswer);
@@ -120,6 +125,7 @@ public class QuizManager {
         return choices;
     }
 
+    // Method to calculate the next review date based on repetition count
     public LocalDateTime getNextReviewDate(int repetition) {
         LocalDateTime now = LocalDateTime.now();
         switch (repetition) {
@@ -133,6 +139,7 @@ public class QuizManager {
         }
     }
 
+    // Method to handle user's answer and update the database accordingly
     public void handleUserAnswer(String UserName, int wordId, boolean isCorrect) {
         int repetition = getCurrentRepetition(UserName, wordId);
         LocalDateTime nextReview;
@@ -152,6 +159,7 @@ public class QuizManager {
         }
     }
 
+    // Method to update user's attempt in the database
     public void updateAttempt(String UserName, int wordId, boolean isCorrect, int repetition, LocalDateTime nextReview) {
         String sql;
         if (isCorrect) {
@@ -174,6 +182,7 @@ public class QuizManager {
         }
     }
 
+    // Method to get the current repetition count for a word
     private int getCurrentRepetition(String UserName, int wordId) {
         String sql = "SELECT repetition FROM user_attempts WHERE UserName = ? AND word_id = ?";
         try (Connection conn = connectDB();
@@ -190,6 +199,7 @@ public class QuizManager {
         return 0;
     }
 
+    // Method to move a word to the known pool in the database
     public void moveWordToKnownPool(int wordId) {
         String sql = "UPDATE wordcards SET status = 'known' WHERE word_id = ?";
         try (Connection conn = connectDB();
@@ -201,6 +211,7 @@ public class QuizManager {
         }
     }
 
+    // Method to reset the progress of a word
     public void resetWordProgress(int wordId) {
         String sql = "UPDATE user_attempts SET repetition = 1, next_review_date = ? WHERE word_id = ?";
         try (Connection conn = connectDB();
@@ -214,6 +225,7 @@ public class QuizManager {
         }
     }
 
+    // Method to get performance data for the user
     public ObservableList<PerformanceData> getPerformanceData(String UserName) {
         ObservableList<PerformanceData> performanceData = FXCollections.observableArrayList();
         String query = "SELECT ua.word_id, wc.EN_word, SUM(ua.correct_answers) AS correctAnswers, " +
@@ -260,6 +272,7 @@ public class QuizManager {
         return performanceData;
     }
 
+    // Method to print the performance report
     public void printPerformanceReport(ObservableList<PerformanceData> data) {
         try {
             PrinterJob job = PrinterJob.createPrinterJob();
@@ -285,11 +298,12 @@ public class QuizManager {
         }
     }
 
+    // Method to create the content for the performance report
     private Node createContent(ObservableList<PerformanceData> data, int pageIndex, int itemsPerPage) {
         VBox content = new VBox(15);
         content.setAlignment(Pos.CENTER);
 
-        Label title = new Label(loggedInUsername +"'s Performance Report");
+        Label title = new Label(loggedInUsername + "'s Performance Report");
         title.setStyle("-fx-font-size: 23px;");
         content.getChildren().add(title);
 

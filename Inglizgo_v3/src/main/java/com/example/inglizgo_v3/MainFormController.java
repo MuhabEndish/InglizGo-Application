@@ -1,4 +1,3 @@
-
 package com.example.inglizgo_v3;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -26,9 +25,9 @@ import java.sql.*;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-
 public class MainFormController implements Initializable {
 
+    // FXML elements for various forms and controls
     @FXML
     private Button ChangePasswordPane_CancelChangeBtn;
 
@@ -43,7 +42,6 @@ public class MainFormController implements Initializable {
 
     @FXML
     private PasswordField ChangePasswordPane_ConfirmPassword;
-
 
     @FXML
     private PasswordField ChangePasswordPane_NewPassword;
@@ -189,7 +187,7 @@ public class MainFormController implements Initializable {
     @FXML
     private Button startQuizButton;
 
-
+    // Database connection variables
     private Connection connect;
     private PreparedStatement prepare;
     private ResultSet result;
@@ -197,7 +195,7 @@ public class MainFormController implements Initializable {
     public String loggedInUsername; // Assuming username is used as the identifier
     private long userId;
 
-    //METHOD ESTABLISHES A CONNECTION TO A MySQL DATABASE NAMED "inglizgo" HOSTED ON THE LOCALHOST SERVER
+    // METHOD ESTABLISHES A CONNECTION TO A MySQL DATABASE NAMED "inglizgo" HOSTED ON THE LOCALHOST SERVER
     public Connection connectDB(){
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -208,23 +206,22 @@ public class MainFormController implements Initializable {
         return null;
     }
 
+    // Setter for loggedInUsername
     public void setLoggedInUsername(String username) {
         this.loggedInUsername = username;
         System.out.println("Username set to: " + username); // Debug print
 
         // Fetch and display word cards for the logged-in user
         fetchAndDisplayWordCards();
-
         updateUsernameLabel();
-
-
     }
-    // userId için bir setter metodu
+
+    // Setter for userId
     public void setUserId(long userId) {
         this.userId = userId;
     }
 
-    // userId için bir getter metodu, gerektiğinde kullanmak üzere
+    // Getter for userId
     public long getUserId() {
         return userId;
     }
@@ -238,6 +235,7 @@ public class MainFormController implements Initializable {
             upperPane_userName.setText("Not logged in"); // Or any other default text you want to display
         }
     }
+
     @FXML
     public void switchBetweenFroms(ActionEvent event) {
         if (event.getSource() == upperPane_HomeBtn) {
@@ -260,19 +258,16 @@ public class MainFormController implements Initializable {
             UserInfo_mainPane.setVisible(false);
             UserInfo_ChangePasswordPane.setVisible(true);
             DeleteAccountPane.setVisible(false);
-            
-        }else if (event.getSource() == ChangePasswordPane_CancelChangeBtn
+        } else if (event.getSource() == ChangePasswordPane_CancelChangeBtn
                 || event.getSource() == DeleteAccountCancelBtn) {
             UserInfo_mainPane.setVisible(true);
             UserInfo_ChangePasswordPane.setVisible(false);
             DeleteAccountPane.setVisible(false);
-
-        }else if (event.getSource() == userInfo_DeleteAccountBtn) {
+        } else if (event.getSource() == userInfo_DeleteAccountBtn) {
             UserInfo_mainPane.setVisible(false);
             UserInfo_ChangePasswordPane.setVisible(false);
             DeleteAccountPane.setVisible(true);
-
-        }else {
+        } else {
             // Default case to handle other buttons if necessary
             UserInfo_pane.setVisible(false);
             Home_Page.setVisible(true);
@@ -280,8 +275,6 @@ public class MainFormController implements Initializable {
             fetchAndDisplayWordCards(); // Reload cards when defaulting back to home
         }
     }
-
-
 
     // Method to open a file dialog and return the selected file
     private File openFileDialog(String title) {
@@ -313,6 +306,7 @@ public class MainFormController implements Initializable {
         }
     }
 
+    // Method to save the user image to the database
     private void saveUserImageToDatabase(Image userImage) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
@@ -354,14 +348,13 @@ public class MainFormController implements Initializable {
         }
     }
 
+    // Method to set the user image in the UI
     public void setUserImage(Image image) {
         userInfo_ImageView.setImage(image);
         userInfo_ImageView1.setImage(image);
-
-
     }
 
-    //To load the user's image when the program starts or the user logs in
+    // To load the user's image when the program starts or the user logs in
     public Image loadUserImageFromDatabase(String username) {
         try {
             Connection connection = connectDB(); // Assuming you have a method to establish a database connection
@@ -392,12 +385,10 @@ public class MainFormController implements Initializable {
             userInfo_ImageView.setImage(null);
             userInfo_ImageView1.setImage(null);
             deleteImageFromDatabase(); // Call method to delete image from the database
-
-
-
         }
     }
 
+    // Method to delete the user image from the database
     private void deleteImageFromDatabase() {
         try {
             Connection connection = connectDB(); // Establish database connection
@@ -435,7 +426,6 @@ public class MainFormController implements Initializable {
 
     @FXML
     void ConfirmNewUsername(ActionEvent event) {
-
         AlertMessage alert = new AlertMessage();
 
         String newUsername = UserInfo_NewUsernameText.getText().trim();
@@ -474,7 +464,6 @@ public class MainFormController implements Initializable {
             // Username field is empty or same as current username
             alert.errorMessage("The new Username can not be empty, or the same as current username.");
         }
-
     }
 
     @FXML
@@ -505,7 +494,6 @@ public class MainFormController implements Initializable {
             selectStatement.setString(1, loggedInUsername);
             ResultSet resultSet = selectStatement.executeQuery();
             if (resultSet.next()) {
-
                 String storedPassword = resultSet.getString("UserPassword");
 
                 if (currentPassword.equals(storedPassword)) {
@@ -517,18 +505,15 @@ public class MainFormController implements Initializable {
                     int rowsAffected = updateStatement.executeUpdate();
 
                     if (rowsAffected > 0) {
-
                         // Password updated successfully
                         alert.successMessage("Password changed successfully.");
                         UserInfo_mainPane.setVisible(true);
                         UserInfo_ChangePasswordPane.setVisible(false);
 
-
-                        //TO CLEAR THE FORM AFTER PASSWORD CHANGED SUCCESSFULLY
+                        // TO CLEAR THE FORM AFTER PASSWORD CHANGED SUCCESSFULLY
                         changePassword_CurrentPssword.setText("");
                         ChangePasswordPane_NewPassword.setText("");
                         ChangePasswordPane_ConfirmPassword.setText("");
-
                     } else {
                         // Password update failed
                         alert.errorMessage("Failed to change password. Please try again.");
@@ -550,7 +535,7 @@ public class MainFormController implements Initializable {
     }
 
     private void ForgotPasswordFromUserInfo() {
-
+        // Method to handle forgot password from user info pane (empty for now)
     }
 
     @FXML
@@ -563,7 +548,6 @@ public class MainFormController implements Initializable {
         // Check user's response to the confirmation message
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
-
                 Connection connection = connectDB();
 
                 // Verify the user's credentials (e.g., password)
@@ -586,7 +570,6 @@ public class MainFormController implements Initializable {
                             stage.close();
                             // Show the login form
                             showLoginForm();
-
                         } else {
                             // Account deletion failed
                             alert.errorMessage("Failed to delete account. Please try again.");
@@ -608,6 +591,7 @@ public class MainFormController implements Initializable {
         }
     }
 
+    // Method to show the login form
     private void showLoginForm() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Login_SignUp_ForotPassword.fxml"));
@@ -621,9 +605,6 @@ public class MainFormController implements Initializable {
         }
     }
 
-
-
-
     // Method to convert JavaFX Image to byte array
     private byte[] convertImageToBytes(Image image) throws IOException {
         BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
@@ -633,7 +614,6 @@ public class MainFormController implements Initializable {
         ImageIO.write(bufferedImage, "gif", byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
     }
-
 
     @FXML
     private void saveWordCardToDatabase(ActionEvent event) {
@@ -668,17 +648,12 @@ public class MainFormController implements Initializable {
                 WordCard_uploadedImageView.setImage(null);
 
                 reloadDisplayedWordCards();
-
-
             } catch (SQLException | IOException e) {
                 alert.errorMessage("Error occurred while saving the card: " + e.getMessage());
                 e.printStackTrace();
             }
         }
     }
-
-
-
 
     @FXML
     private void signOut() {
@@ -707,6 +682,7 @@ public class MainFormController implements Initializable {
         userInfo_UserName.setVisible(true); // Show the username label
     }
 
+    // Method to fetch and display word cards
     private void fetchAndDisplayWordCards() {
         try {
             AlertMessage alert = new AlertMessage();
@@ -795,6 +771,7 @@ public class MainFormController implements Initializable {
         }
     }
 
+    // Method to delete a word card from the database
     private void deleteWordCardFromDatabase(String word) {
         try {
             connect = connectDB();
@@ -808,11 +785,13 @@ public class MainFormController implements Initializable {
         }
     }
 
+    // Method to clear displayed word cards
     private void clearDisplayedWordCards() {
         // Remove all existing card containers from the main form pane
         WordCard_Screen.getChildren().removeIf(node -> node.getStyleClass().contains("word-card"));
     }
 
+    // Method to reload displayed word cards
     private void reloadDisplayedWordCards() {
         // Clear existing displayed cards
         clearDisplayedWordCards();
@@ -820,7 +799,6 @@ public class MainFormController implements Initializable {
         // Fetch and display new cards
         fetchAndDisplayWordCards();
     }
-
 
     @FXML
     private void startQuiz(ActionEvent event) {
@@ -843,6 +821,7 @@ public class MainFormController implements Initializable {
         }
     }
 
+    // Method to show an alert with the specified title and message
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -851,36 +830,9 @@ public class MainFormController implements Initializable {
         alert.showAndWait();
     }
 
-    @FXML
-    private void handleViewPerformance() {
-        try {
-            // Load the performance review layout
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("PerformanceReview.fxml"));
-            Parent root = loader.load();
-
-            // Get the controller and initialize it if necessary
-            PerformanceReviewController controller = loader.getController();
-            controller.init(loggedInUsername); // Ensure you pass the correct logged-in username
-
-            // Create a new scene and stage (or use existing stage if that fits your design better)
-            Scene scene = new Scene(root);
-            Stage stage = new Stage();
-            stage.setTitle("Performance Review");
-            stage.setScene(scene);
-            stage.show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-    }
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         System.out.println("Initializing with username: " + loggedInUsername); // Debug print
-
 
         // Set Home_Page visible initially
         Home_Page.setVisible(true);
@@ -895,8 +847,5 @@ public class MainFormController implements Initializable {
                 closeUsernameTextField();
             }
         });
-
-
     }
-
 }
