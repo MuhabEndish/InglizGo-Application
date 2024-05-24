@@ -95,13 +95,10 @@ public class QuizManager {
                             rs.getString("TR_translate"),
                             options
                     ));
-                    // Debug statement to print the fetched question
-                    System.out.println("Fetched Question: " + rs.getString("EN_word") + " with next review date <= " + today);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("SQL error occurred while fetching questions for user.");
         }
         return questions;
     }
@@ -242,7 +239,6 @@ public class QuizManager {
             pstmt.setString(1, UserName);
             ResultSet rs = pstmt.executeQuery();
             if (!rs.isBeforeFirst()) {
-                System.out.println("No data fetched for username: " + UserName);
                 return performanceData;
             }
             while (rs.next()) {
@@ -269,7 +265,6 @@ public class QuizManager {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("SQL error occurred while fetching performance data: " + e.getMessage());
         }
         return performanceData;
     }

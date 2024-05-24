@@ -209,7 +209,6 @@ public class MainFormController implements Initializable {
     // Setter for loggedInUsername
     public void setLoggedInUsername(String username) {
         this.loggedInUsername = username;
-        System.out.println("Username set to: " + username); // Debug print
 
         // Fetch and display word cards for the logged-in user
         fetchAndDisplayWordCards();
@@ -366,11 +365,7 @@ public class MainFormController implements Initializable {
                 if (imageBytes != null) { // Check if imageBytes is not null
                     InputStream inputStream = new ByteArrayInputStream(imageBytes);
                     return new Image(inputStream);
-                } else {
-                    System.out.println("User photo not found for user: " + username);
                 }
-            } else {
-                System.out.println("No user found with username: " + username);
             }
             connection.close();
         } catch (SQLException e) {
@@ -402,16 +397,12 @@ public class MainFormController implements Initializable {
             int rowsAffected = deleteStatement.executeUpdate();
 
             if (rowsAffected > 0) {
-                System.out.println("User image deleted successfully from the database.");
                 alert.successMessage("Your Image has been deleted");
-            } else {
-                System.out.println("No user image found for deletion.");
             }
 
             connection.close(); // Close the database connection
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error occurred while deleting user image from the database.");
         }
     }
 
@@ -832,7 +823,6 @@ public class MainFormController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("Initializing with username: " + loggedInUsername); // Debug print
 
         // Set Home_Page visible initially
         Home_Page.setVisible(true);

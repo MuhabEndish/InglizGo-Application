@@ -48,7 +48,6 @@ public class PerformanceReviewController {
     private void loadData() {
         try {
             ObservableList<PerformanceData> data = quizManager.getPerformanceData(UserName);
-            System.out.println("Data fetched: " + data.size() + " records");
             performanceTable.setItems(data);
         } catch (Exception e) {
             e.printStackTrace();
