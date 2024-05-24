@@ -73,15 +73,18 @@ public class QuizManager {
     public List<Question> fetchQuestionsForUser() {
         List<Question> questions = new ArrayList<>();
         LocalDate today = LocalDate.now();
-        String query = "SELECT wc.word_id, wc.EN_word, wc.TR_translate, wc.FirstEx, wc.SecondEx " +
+        String query =  "SELECT wc.word_id, wc.EN_word, wc.TR_translate, wc.FirstEx, wc.SecondEx " +
                 "FROM wordcards wc " +
                 "LEFT JOIN user_attempts ua ON wc.word_id = ua.word_id AND ua.UserName = ? " +
-                "WHERE (ua.next_review_date IS NULL OR DATE(ua.next_review_date) <= ?)";
+                "WHERE (ua.next_review_date IS NULL OR DATE(ua.next_review_date) <= ? OR ua.UserName IS NULL) " +
+                "AND (wc.UserName = ? OR ua.UserName = ?)";
 
         try (Connection conn = connectDB();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, loggedInUsername);
             pstmt.setDate(2, Date.valueOf(today));
+            pstmt.setString(3, loggedInUsername);
+            pstmt.setString(4, loggedInUsername);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
@@ -128,13 +131,20 @@ public class QuizManager {
     public LocalDateTime getNextReviewDate(int repetition) {
         LocalDateTime now = LocalDateTime.now();
         switch (repetition) {
-            case 1: return now.plus(1, ChronoUnit.DAYS);
-            case 2: return now.plus(1, ChronoUnit.WEEKS);
-            case 3: return now.plus(1, ChronoUnit.MONTHS);
-            case 4: return now.plus(3, ChronoUnit.MONTHS);
-            case 5: return now.plus(6, ChronoUnit.MONTHS);
-            case 6: return now.plus(1, ChronoUnit.YEARS);
-            default: return now;
+            case 1:
+                return now.plus(1, ChronoUnit.DAYS);
+            case 2:
+                return now.plus(1, ChronoUnit.WEEKS);
+            case 3:
+                return now.plus(1, ChronoUnit.MONTHS);
+            case 4:
+                return now.plus(3, ChronoUnit.MONTHS);
+            case 5:
+                return now.plus(6, ChronoUnit.MONTHS);
+            case 6:
+                return now.plus(1, ChronoUnit.YEARS);
+            default:
+                return now;
         }
     }
 

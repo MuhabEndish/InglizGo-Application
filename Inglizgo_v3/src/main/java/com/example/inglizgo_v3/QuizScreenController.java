@@ -90,6 +90,7 @@ public class QuizScreenController implements Initializable {
             quizScreen_ViewResultsBtn.setDisable(false);
         } else {
             displayNextQuestion();
+
         }
     }
 
