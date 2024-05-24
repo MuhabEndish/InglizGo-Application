@@ -95,6 +95,7 @@ public class QuizScreenController implements Initializable {
 
     // Method to update the question display
     private void updateQuestionDisplay() {
+
         if (currentQuestion != null) {
             questionLabel.setText("What is the Turkish meaning of " + currentQuestion.getEnWord() + " ?");
             List<String> options = currentQuestion.getShuffledOptions();

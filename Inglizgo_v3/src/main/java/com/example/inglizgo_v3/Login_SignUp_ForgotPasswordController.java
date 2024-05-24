@@ -131,7 +131,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable {
                 || Login_password.getText().isEmpty()){
             alert.errorMessage("Incorrect Username or Password.");
         } else {
-            String selectData = "SELECT user_id , UserName , UserPassword FROM user_info WHERE "
+            String selectData = "SELECT UserName , UserPassword FROM user_info WHERE "
                     + "UserName = ? and UserPassword = ? ";
 
             connect = connectDB();
@@ -150,14 +150,13 @@ public class Login_SignUp_ForgotPasswordController implements Initializable {
 
                 result = prepare.executeQuery();
                 if (result.next()) {
-                    long userId = result.getLong("user_id");
-                    System.out.println("Logged in user_id: " + userId);
+
 
                     // Proceed to the main form and pass the user_id
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("mainForm.fxml"));
                     Parent root = loader.load();
                     MainFormController mainFormController = loader.getController();
-                    mainFormController.setUserId(userId);  // Assuming you have a setter for user_id in MainFormController
+
 
                     // Set the logged-in username in MainFormController
                     mainFormController.setLoggedInUsername(Login_username.getText());
@@ -187,19 +186,20 @@ public class Login_SignUp_ForgotPasswordController implements Initializable {
     // Method to toggle the visibility of the password
     public void showPassword(){
         if(Login_selectShowPass.isSelected()){
-            Login_shownPassword.setText(Login_password.getText());
             Login_shownPassword.setVisible(true);
             Login_password.setVisible(false);
+            Login_shownPassword.setText(Login_password.getText());
         } else {
-            Login_password.setText(Login_shownPassword.getText());
             Login_shownPassword.setVisible(false);
             Login_password.setVisible(true);
+            Login_password.setText(Login_shownPassword.getText());
         }
     }
 
     // Method to handle forgotten password functionality
     public void forgotPassword(){
         AlertMessage alert = new AlertMessage();
+
 
         // Checks if any forgot password fields are empty
         if(ForgPass_Email.getText().isEmpty()
@@ -227,6 +227,8 @@ public class Login_SignUp_ForgotPasswordController implements Initializable {
                     Login_Form.setVisible(false);
                     ForgotPass_Form.setVisible(false);
                     ResetPass_Form.setVisible(true);
+
+
                 } else {
                     alert.errorMessage("Incorrect Information.");
                 }
@@ -282,6 +284,7 @@ public class Login_SignUp_ForgotPasswordController implements Initializable {
                 ForgPass_Email.setText("");
                 Forg_SecQuestion.getSelectionModel().clearSelection();
                 Forg_Answer.setText("");
+
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -376,6 +379,9 @@ public class Login_SignUp_ForgotPasswordController implements Initializable {
             Login_Form.setVisible(false);
             ForgotPass_Form.setVisible(true);
             ResetPass_Form.setVisible(false);
+
+            //unviset the HyperLink
+            Login_ForgPass.setVisited(false);
 
             Login_password.setVisible(true);
             Login_password.setText("");
